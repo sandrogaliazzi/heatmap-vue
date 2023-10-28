@@ -1,5 +1,5 @@
 <script setup>
-import AppBar from "@/components/Dashboard/AppBar";
+import AppBar from "@/components/AppBar/AppBar";
 import Dashboard from "@/components/Dashboard/Dashboard";
 </script>
 <template>
