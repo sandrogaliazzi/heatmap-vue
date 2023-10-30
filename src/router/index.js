@@ -56,7 +56,7 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to) => {
+router.beforeEach((to, from) => {
   const user = useUserStore();
   const { isAuthenticated } = storeToRefs(user);
   if (
