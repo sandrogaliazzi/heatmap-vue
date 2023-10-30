@@ -12,7 +12,9 @@ export const useUserStore = defineStore("user", () => {
   };
 
   const isAuthenticated = computed(() => {
-    return localStorage.getItem("user") ? true : false;
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    return user == null ? false : true;
   });
 
   const logout = () => {

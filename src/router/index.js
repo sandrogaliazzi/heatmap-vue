@@ -61,7 +61,7 @@ router.beforeEach((to) => {
   const { isAuthenticated } = storeToRefs(user);
   if (
     // make sure the user is authenticated
-    !isAuthenticated &&
+    !isAuthenticated.value &&
     // ❗️ Avoid an infinite redirect
     to.name !== "Login"
   ) {
