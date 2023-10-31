@@ -57,12 +57,41 @@ const onCloseDialog = (value) => {
         value="logout"
         @click="emit('logout:user')"
       ></v-list-item>
-      <v-list-item
+      <!-- <v-list-item
         prepend-icon="mdi-monitor-dashboard"
         title="Dashboard"
         value="Dashboard"
         to="/dashboard"
-      ></v-list-item>
+      ></v-list-item> -->
+      <v-list-group value="Dashboard" prepend-icon="mdi-view-dashboard">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" title="Dashboard"></v-list-item>
+        </template>
+        <v-list-item
+          prepend-icon="mdi-monitor-dashboard"
+          title="Adm Painel"
+          value="Dashboard"
+          to="/dashboard"
+        ></v-list-item>
+        <v-list-item
+          prepend-icon="mdi-account-group"
+          title="Usuários"
+          value="users"
+          to="/users"
+        ></v-list-item>
+        <v-list-item
+          prepend-icon="mdi-web"
+          title="Ativações"
+          value="logs"
+          to="/logs"
+        ></v-list-item>
+        <v-list-item
+          prepend-icon="mdi-cctv"
+          title="Câmeras"
+          value="cameras"
+          to="/camera"
+        ></v-list-item>
+      </v-list-group>
     </v-list>
   </v-list>
   <DialogBox :isOpen="openDialog" @update:modalValue="onCloseDialog">

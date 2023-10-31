@@ -81,7 +81,20 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <v-card title="Adicionar novo Usuário" class="pt-3">
+  <v-card>
+    <v-card-title class="bg-orange">
+      <div class="d-flex justify-space-between align-center">
+        <div class="d-flex">
+          <p class="me-2">Add Usuário</p>
+          <v-icon>mdi-account-plus</v-icon>
+        </div>
+        <v-btn
+          variant="text"
+          icon="mdi-close"
+          @click="emit('update:modalDialog', false)"
+        ></v-btn>
+      </div>
+    </v-card-title>
     <v-card-text>
       <v-container>
         <v-row>
@@ -140,10 +153,5 @@ const handleSubmit = async () => {
         </v-row>
       </v-container>
     </v-card-text>
-    <v-card-actions>
-      <v-btn color="primary" block @click="emit('update:modalDialog', false)"
-        >Fechar</v-btn
-      >
-    </v-card-actions>
   </v-card>
 </template>

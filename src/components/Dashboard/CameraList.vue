@@ -69,31 +69,20 @@ const readImgFiles = async (files) => {
   <v-row justify="center">
     <DialogBox :isOpen="dialog" @update:modal-value="onCloseDialog">
       <v-card elevation="10">
-        <v-card-title class="d-flex justify-space-between">
-          <div>
-            <span>QR CODE</span>
-            <v-icon>mdi-qrcode</v-icon>
-          </div>
-          <div>
-            <v-tooltip text="Abrir imagem em nova guia" location="start">
-              <template v-slot:activator="{ props }">
-                <v-btn
-                  v-bind="props"
-                  color="primary"
-                  variant="tonal"
-                  icon="mdi-image-move"
-                ></v-btn>
-              </template>
-            </v-tooltip>
-            <v-btn
-              color="error"
-              variant="tonal"
-              icon="mdi-close"
-              class="ms-2"
-              @click="dialog = false"
-            ></v-btn>
-          </div>
-        </v-card-title>
+        <v-toolbar color="orange">
+          <v-icon class="ml-4">mdi-qrcode</v-icon>
+          <v-toolbar-title> QR CODE </v-toolbar-title>
+
+          <v-spacer></v-spacer>
+
+          <v-btn
+            variant="text"
+            icon="mdi-close"
+            class="ms-2"
+            @click="dialog = false"
+          ></v-btn>
+        </v-toolbar>
+
         <v-card-text>
           <v-carousel hide-delimiters>
             <v-carousel-item

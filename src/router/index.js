@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import LoginView from "@/views/LoginView";
 import HeatMapView from "@/views/HeatMapView";
 import DashboardView from "@/views/DashboardView";
+import PageNotFoundView from "@/views/PageNotFoundView";
 import AdminPanel from "@/components/Dashboard/AdminPanel";
 import UserList from "@/components/Dashboard/UserList";
 import LogsList from "@/components/Dashboard/LogsList";
@@ -37,7 +38,7 @@ const router = createRouter({
           component: AdminPanel,
         },
         {
-          path: "/users/:id?",
+          path: "/users",
           name: "user-list",
           component: UserList,
         },
@@ -52,6 +53,10 @@ const router = createRouter({
           component: CameraList,
         },
       ],
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      component: PageNotFoundView,
     },
   ],
 });

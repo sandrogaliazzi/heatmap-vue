@@ -95,8 +95,8 @@ const handleSubmit = async () => {
         indeterminate
       ></v-progress-linear>
     </template>
-    <v-card-title>
-      <div class="d-flex justify-space-between">
+    <v-card-title class="bg-orange">
+      <div class="d-flex justify-space-between align-center">
         <div class="d-flex">
           <p class="me-2">Adicionar Câmera</p>
           <v-icon>mdi-cctv</v-icon>
@@ -161,13 +161,20 @@ const handleSubmit = async () => {
           color="orange"
           v-model="checkSelectedFiles"
         ></v-checkbox>
-        <v-carousel hide-delimiters class="px-5">
+        <v-carousel hide-delimiters style="height: 200px">
           <v-carousel-item
             v-for="(image, index) in selectedImages"
             :key="index"
             :src="image"
           ></v-carousel-item>
         </v-carousel>
+      </div>
+      <div
+        v-else
+        class="d-flex justify-center align-center"
+        style="height: 200px"
+      >
+        <v-icon size="100">mdi-image-area</v-icon>
       </div>
     </v-card-text>
   </v-card>
