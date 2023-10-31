@@ -1,37 +1,24 @@
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch } from "vue";
 import LogsChart from "./LogsChart.vue";
 import DialogBox from "../Dialog/Dialog.vue";
 import LogsFilterCard from "./LogsFilterCard.vue";
 
-const { logs } = defineProps(["logs"]);
-
 const dialog = ref(false);
 const nextKey = ref(1);
 const loadingChart = ref(true);
-const dateFilter = ref(null);
-const logsCoordinates = ref([]);
+const selectedDate = ref(null);
 
-const onCloseDialog = (value) => (dialog.value = value);
+const handleDateSelection = (val) => {
+  selectedDate.value = val;
+  dialog.value = false;
+};
 
-watch(dateFilter, () => {
-  if (!dateFilter.value) {
-    logsCoordinates.value = logs.map((log) => ({
-      lat: log.lat,
-      lng: log.lng,
-    }));
-  } else {
-    const { month, _ } = dateFilter.value;
-
-    logsCoordinates.value = logs.value
-      .filter((log) => {
-        return log.splitDate.month == month;
-      })
-      .map((log) => ({ lat: log.lat, lng: log.lng }));
-  }
-
+watch(selectedDate, () => {
   forceChartRender();
 });
+
+const onCloseDialog = (value) => (dialog.value = value);
 
 const forceChartRender = () => {
   nextKey.value++;
@@ -62,16 +49,12 @@ const forceChartRender = () => {
         <DialogBox :isOpen="dialog" @update:modal-value="onCloseDialog">
           <LogsFilterCard
             @update:close-dialog="dialog = false"
-            @update:clear-filter-date="dateFilter = null"
+            @update:clear-filter-date="selectedDate = null"
+            @update:set-filter-date="handleDateSelection"
           />
         </DialogBox>
         <v-card-title class="d-flex justify-space-between align-center">
-          <p>
-            Numero de Ativaçõs por cidade
-            <b v-if="dateFilter"
-              >Em: {{ dateFilter?.month + "/" + dateFilter?.year }}</b
-            >
-          </p>
+          <p>Numero de Ativaçõs por cidade</p>
           <v-btn
             variant="tonal"
             color="secondary"
@@ -89,12 +72,16 @@ const forceChartRender = () => {
           ></v-progress-linear>
         </template>
         <v-card-text>
-          <LogsChart
-            :logs="logs"
-            :key="nextKey"
-            :loading="loadingChart"
-            @update:loading="loadingChart = false"
-          />
+          <Suspense>
+            <LogsChart
+              :key="nextKey"
+              :selectedDate="selectedDate"
+              @update:loading="loadingChart = false"
+            />
+            <template #fallback>
+              <h2>Loading chart...</h2>
+            </template>
+          </Suspense>
         </v-card-text>
       </v-card>
     </v-col>

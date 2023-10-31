@@ -1,6 +1,8 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { Bar } from "vue-chartjs";
+import { getTotalLogsByCity } from "./chart";
+import fetchApi from "@/api";
 import {
   Chart as ChartJS,
   Title,
@@ -20,26 +22,28 @@ ChartJS.register(
   LinearScale
 );
 
-const { logs, loading } = defineProps(["logs", "loading"]);
+const { selectedDate } = defineProps(["selectedDate"]);
 const emit = defineEmits(["update:loading"]);
 
-const chartData = ref(null);
 const chartOptions = ref({
   responsive: true,
 });
 
-const logCounterBycity = ref({});
-const loaded = ref(false);
-
-const logsCoordinates = computed(() => {
-  return logs.map((log) => ({
-    lat: log.lat,
-    lng: log.lng,
-  }));
+const logCounterBycity = ref({
+  labels: [],
+  data: [],
 });
+const loaded = ref(false);
+const logs = ref([]);
+const chartData = ref(null);
 
 onMounted(async () => {
-  logCounterBycity.value = await getTotalLogsByCity();
+  logs.value = await fetchApi("logctoclient");
+
+  logCounterBycity.value = await getTotalLogsByCity(
+    logs.value.data,
+    selectedDate
+  );
 
   const { labels, data } = logCounterBycity.value;
 
@@ -63,53 +67,11 @@ onMounted(async () => {
     ],
   };
 
-  if (data.length > 0) loaded.value = true;
+  if (logCounterBycity.value.data.length > 0) {
+    loaded.value = true;
+  }
   emit("update:loading");
 });
-
-const getCityNameByLatLng = async ({ lat, lng }) => {
-  try {
-    const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true&key=${
-        import.meta.env.VITE_GOOGLE_API_KEY
-      }`
-    );
-    const fullAdress = await response.json();
-
-    return fullAdress?.results[0]?.address_components.find(
-      (address) => address.types[0] == "administrative_area_level_2"
-    );
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-const getTotalLogsByCity = async () => {
-  const promises = logsCoordinates.value.map(async (value) => {
-    const cityName = await getCityNameByLatLng({
-      lat: value.lat,
-      lng: value.lng,
-    });
-    return cityName;
-  });
-
-  const response = await Promise.all(promises);
-
-  const cityNames = response
-    .filter((city) => city)
-    .map((city) => city.long_name);
-
-  const result = {};
-  for (const cityName of cityNames) {
-    if (result[cityName]) result[cityName]++;
-    else result[cityName] = 1;
-  }
-
-  return {
-    labels: Object.keys(result),
-    data: Object.values(result),
-  };
-};
 </script>
 
 <template>
