@@ -99,7 +99,7 @@ const deleteUser = async (id) => {
         @update:user-list="loadUsers"
       />
     </DialogBox>
-    <v-col cols="9" class="fixed-column">
+    <v-col cols="11" md="9" class="fixed-column">
       <v-form>
         <v-text-field
           variant="solo"
@@ -114,7 +114,7 @@ const deleteUser = async (id) => {
         </v-text-field>
       </v-form>
     </v-col>
-    <v-col cols="10" class="scrollable-column">
+    <v-col cols="12" md="10" class="scrollable-column">
       <v-list nav lines="three">
         <div v-if="query && !filteredUsers.length">
           <v-list-item>
@@ -144,7 +144,7 @@ const deleteUser = async (id) => {
               <p>Último acesso em: {{ loginData[user.name]?.lastDate }}</p>
             </v-list-item-subtitle>
             <template #append>
-              <div class="d-flex">
+              <div class="d-none d-sm-flex">
                 <v-btn
                   prepend-icon="mdi-update"
                   variant="tonal"
@@ -159,8 +159,32 @@ const deleteUser = async (id) => {
                   color="error"
                   @click="deleteUser(user._id)"
                   class="ma-2"
-                  >Deletar</v-btn
+                  >Excluir</v-btn
                 >
+              </div>
+              <div class="d-flex d-sm-none">
+                <v-menu>
+                  <template v-slot:activator="{ props }">
+                    <v-btn
+                      icon="mdi-dots-vertical"
+                      variant="text"
+                      v-bind="props"
+                    >
+                    </v-btn>
+                  </template>
+                  <v-list>
+                    <v-list-item
+                      title="Editar"
+                      value="Editar"
+                      @click="editUser(user._id)"
+                    />
+                    <v-list-item
+                      title="Excluir"
+                      value="Excluir"
+                      @click="deleteUser(user._id)"
+                    />
+                  </v-list>
+                </v-menu>
               </div>
             </template>
           </v-list-item>

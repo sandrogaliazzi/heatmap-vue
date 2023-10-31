@@ -51,7 +51,7 @@ watch(date, () => {
 
 <template>
   <v-row justify="center">
-    <v-col cols="8" class="fixed-column">
+    <v-col cols="12" md="8" class="fixed-column">
       <v-form>
         <v-text-field
           variant="solo"
@@ -66,7 +66,7 @@ watch(date, () => {
         </v-text-field>
       </v-form>
     </v-col>
-    <v-col cols="2">
+    <v-col cols="12" md="2">
       <v-text-field
         variant="solo"
         type="date"
@@ -76,7 +76,7 @@ watch(date, () => {
     </v-col>
   </v-row>
   <v-row no-gutters justify="center">
-    <v-col cols="10">
+    <v-col cols="12" md="10">
       <v-chip
         prepend-icon="mdi-calendar-range"
         closable
@@ -88,8 +88,8 @@ watch(date, () => {
     </v-col>
   </v-row>
   <v-row justify="center">
-    <v-col cols="10" class="scrollable-column">
-      <v-list nav lines="two">
+    <v-col cols="12" md="10" class="scrollable-column">
+      <v-list nav lines="three">
         <div v-if="query && !filterLogsByNameAndDate.length">
           <v-list-item>
             <div
@@ -108,12 +108,19 @@ watch(date, () => {
         <div v-else>
           <v-virtual-scroll :items="filterLogsByNameAndDate || logs">
             <template v-slot:default="{ item }">
-              <v-list-item :title="item.name.toUpperCase()" :value="item.name">
+              <v-list-item
+                :title="item.name.toUpperCase()"
+                :value="item.name"
+                prepend-icon="mdi-web"
+              >
                 <v-list-item-subtitle class="mt-2">
                   <p>{{ item.date_time }}</p>
+                  <p class="d-block d-sm-none">
+                    {{ item.user }} <b>CTO: {{ item.cto_name }}</b>
+                  </p>
                 </v-list-item-subtitle>
                 <template #append>
-                  <div class="d-flex">
+                  <div class="d-none d-sm-flex">
                     <v-chip
                       class="mr-2"
                       prepend-icon="mdi-tools"

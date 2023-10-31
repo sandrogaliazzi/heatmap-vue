@@ -100,14 +100,13 @@ const readImgFiles = async (files) => {
               v-for="(item, i) in urlImgList"
               :key="i"
               :src="item"
-              @click="(e) => console.log(e)"
               cover
             ></v-carousel-item>
           </v-carousel>
         </v-card-text>
       </v-card>
     </DialogBox>
-    <v-col cols="10" class="fixed-column">
+    <v-col cols="12" md="10" class="fixed-column">
       <v-form>
         <v-text-field
           variant="solo"
@@ -120,7 +119,7 @@ const readImgFiles = async (files) => {
         </v-text-field>
       </v-form>
     </v-col>
-    <v-col cols="10" class="scrollable-column">
+    <v-col cols="12" md="10" class="scrollable-column">
       <v-list nav lines="three">
         <div v-if="query && !filteredResults.length">
           <v-list-item>
@@ -142,13 +141,23 @@ const readImgFiles = async (files) => {
             v-for="camera in filteredResults || cameras"
             :title="camera.clientCameraName.toUpperCase()"
             :value="camera.serialNumber"
-            prepend-icon="mdi-camera-account"
           >
+            <template #prepend>
+              <v-btn
+                icon="mdi-camera-account"
+                variant="text"
+                class="mr-2"
+                @click="getCameraImgPath(camera)"
+              ></v-btn>
+            </template>
             <v-list-item-subtitle class="mt-2">
               <p>Camera registrada em: {{ camera.registerDate }}</p>
+              <p class="d-block d-sm-none font-weight-bold">
+                {{ camera.serialNumber }}
+              </p>
             </v-list-item-subtitle>
             <template #append>
-              <div class="d-flex align-center">
+              <div class="d-none d-sm-flex align-center">
                 <v-chip color="primary">
                   {{ camera.serialNumber }}
                 </v-chip>
