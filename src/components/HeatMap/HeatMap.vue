@@ -10,8 +10,13 @@ import DialogBox from "@/components/Dialog/Dialog.vue";
 import Marker from "./Marker.vue";
 
 const store = useTomodatStore();
-const { getHeatMapData, getMarkersData, getSelectedCtoPosition } =
-  storeToRefs(store);
+const {
+  getHeatMapData,
+  getMarkersData,
+  getSelectedCtoPosition,
+  selectedUserLocation,
+  getSelectedUserPosition,
+} = storeToRefs(store);
 const { getCto, getTomodatData } = store;
 
 const heatmapStore = useHeatMapStore();
@@ -30,7 +35,10 @@ const getCtoById = (id) => {
   openModal.value = true;
 };
 
-watch(getSelectedCtoPosition, () => (mapZoom.value = 16));
+watch(
+  [getSelectedCtoPosition, getSelectedUserPosition],
+  () => (mapZoom.value = 16)
+);
 
 watch(mapRef, (googleMap) => {
   if (googleMap) {
@@ -53,11 +61,17 @@ watch(mapRef, (googleMap) => {
     <CtoCard :cto="cto" />
   </DialogBox>
   <GMapMap
-    :center="getSelectedCtoPosition"
+    :center="getSelectedUserPosition || getSelectedCtoPosition"
     :zoom="mapZoom"
     class="w-100 h-100"
     ref="mapRef"
   >
+    <GMapMarker
+      v-if="getSelectedUserPosition"
+      :animation="2"
+      title="Você está aqui"
+      :position="getSelectedUserPosition"
+    ></GMapMarker>
     <Marker :markers="getMarkersData" @open:cto-dialog="getCtoById" />
     <div v-if="isHeatMapVisible">
       <GMapHeatmap

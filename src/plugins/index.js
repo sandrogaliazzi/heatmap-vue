@@ -23,6 +23,7 @@ export function registerPlugins(app) {
   app.use(VirtualList);
   app.use(VueGoogleMaps, {
     load: {
+      version: 3.52,
       key: import.meta.env.VITE_GOOGLE_API_KEY,
       libraries: ["visualization", "geometry"],
     },

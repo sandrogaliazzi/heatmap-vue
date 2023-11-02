@@ -67,6 +67,7 @@ router.beforeEach((to, from) => {
   if (
     // make sure the user is authenticated
     !isAuthenticated.value &&
+    !localStorage.getItem("user") &&
     // ❗️ Avoid an infinite redirect
     to.name !== "Login"
   ) {

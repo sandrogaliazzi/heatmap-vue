@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, inject } from "vue";
 import { useTomodatStore } from "@/stores/tomodat";
 import { storeToRefs } from "pinia";
 import avatar from "@/assets/avatar.png";
@@ -10,8 +10,11 @@ import CameraForm from "./CameraForm.vue";
 const tomodatStore = useTomodatStore();
 const { selectedCto } = storeToRefs(tomodatStore);
 
-const cto = ref({});
 const { user } = defineProps(["user"]);
+const cto = ref({});
+const isDarkTheme = ref(true);
+
+const changeTheme = inject("changeTheme");
 
 watch(selectedCto, () => {
   cto.value = tomodatStore.getCto(selectedCto.value);
@@ -30,11 +33,27 @@ const onCloseDialog = (value) => {
 
 <template>
   <v-list>
-    <v-list-item
-      :prepend-avatar="avatar"
-      :title="user.name"
-      :subtitle="user.category"
-    ></v-list-item>
+    <v-list-group>
+      <template #activator="{ props }">
+        <v-list-item
+          :prepend-avatar="avatar"
+          :title="user.name"
+          :subtitle="user.category"
+          v-bind="props"
+        >
+        </v-list-item>
+      </template>
+      <v-list-item>
+        <v-switch
+          hide-details
+          v-model="isDarkTheme"
+          color="indigo-darken-3"
+          @click="changeTheme"
+          label="Dark Mode"
+          class="ml-3"
+        ></v-switch>
+      </v-list-item>
+    </v-list-group>
     <v-divider class="my-2"></v-divider>
 
     <v-list density="compact" nav>
@@ -57,12 +76,6 @@ const onCloseDialog = (value) => {
         value="logout"
         @click="emit('logout:user')"
       ></v-list-item>
-      <!-- <v-list-item
-        prepend-icon="mdi-monitor-dashboard"
-        title="Dashboard"
-        value="Dashboard"
-        to="/dashboard"
-      ></v-list-item> -->
       <v-list-group value="Dashboard" prepend-icon="mdi-view-dashboard">
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" title="Dashboard"></v-list-item>

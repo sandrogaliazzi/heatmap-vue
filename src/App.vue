@@ -6,13 +6,20 @@ import { useAuthStore } from "@/stores/auth";
 import Notification from "@/components/Notification/Notification";
 //import teste from "./components/teste.vue";
 
-import { watch } from "vue";
+import { watch, provide, ref } from "vue";
 import { useRouter } from "vue-router";
 
 const auth = useAuthStore();
 const notification = useNotificationStore();
 const user = useUserStore();
 const router = useRouter();
+const isDarkTheme = ref(true);
+
+const setAppTheme = () => {
+  isDarkTheme.value = !isDarkTheme.value;
+};
+
+provide("changeTheme", setAppTheme);
 
 const { tokenExpired } = storeToRefs(auth);
 
@@ -33,7 +40,7 @@ watch(tokenExpired, () => {
 </script>
 
 <template>
-  <v-app theme="dark">
+  <v-app :theme="isDarkTheme ? 'dark' : 'light'">
     <v-main>
       <router-view></router-view>
       <!-- <teste /> -->

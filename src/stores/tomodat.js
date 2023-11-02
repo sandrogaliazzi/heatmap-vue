@@ -8,6 +8,7 @@ export const useTomodatStore = defineStore("tomodat", () => {
   const queryCto = ref("");
   const locatedClients = ref([]);
   const selectedCto = ref("");
+  const selectedUserLocation = ref(null);
 
   async function getTomodatData() {
     const response = await fetchApi.get("/fetch");
@@ -92,19 +93,27 @@ export const useTomodatStore = defineStore("tomodat", () => {
   }
 
   const getSelectedCtoPosition = computed(() => {
-    if (!selectedCto.value)
-      return {
-        lat: -29.58576358380055,
-        lng: -50.8956005852099,
-      };
-    else {
+    const position = { lat: -29.58576358380055, lng: -50.8956005852099 };
+
+    if (selectedCto.value) {
+      selectedUserLocation.value = null;
       const { coord } = getCto(selectedCto.value);
 
-      return {
-        lat: +coord.lat,
-        lng: +coord.lng,
-      };
+      position.lat = +coord.lat;
+      position.lng = +coord.lng;
     }
+
+    return position;
+  });
+
+  const getSelectedUserPosition = computed(() => {
+    if (!selectedUserLocation.value) {
+      return false;
+    }
+    return {
+      lat: selectedUserLocation.value.coords.latitude,
+      lng: selectedUserLocation.value.coords.longitude,
+    };
   });
 
   const getMarkersData = computed(() => {
@@ -155,5 +164,7 @@ export const useTomodatStore = defineStore("tomodat", () => {
     selectedCto,
     getSelectedCtoPosition,
     getAllLocatedClients,
+    selectedUserLocation,
+    getSelectedUserPosition,
   };
 });

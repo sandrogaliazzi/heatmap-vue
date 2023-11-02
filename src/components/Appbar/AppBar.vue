@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { ref, watch } from "vue";
 
-import SideNavList from "./SideNavList.vue";
+import SideNavList from "./SideNavList";
 
 const isSearchBarVisible = ref(false);
 const isCtoMarkerVisible = ref(true);
@@ -18,7 +18,7 @@ const userStore = useUserStore();
 
 const router = useRouter();
 
-const { selectedCto } = storeToRefs(tomodatStore);
+const { selectedCto, selectedUserLocation } = storeToRefs(tomodatStore);
 
 const logout = () => {
   userStore.logout();
@@ -35,6 +35,23 @@ const toggleCtoMarkers = () => {
 const { isHeatMapVisible } = storeToRefs(heatmapStore);
 
 const onAppBarIconClick = () => heatmapStore.toggleHeatMap();
+
+const handleUserLocation = () => {
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      if (selectedUserLocation.value) selectedUserLocation.value = null;
+      else selectedUserLocation.value = pos;
+    },
+    (error) => {
+      console.log(error);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    }
+  );
+};
 </script>
 
 <template>
@@ -69,6 +86,13 @@ const onAppBarIconClick = () => heatmapStore.toggleHeatMap();
     </v-btn>
     <v-btn icon @click="toggleCtoMarkers">
       <v-icon>{{ isCtoMarkerVisible ? "mdi-cube" : "mdi-cube-off" }}</v-icon>
+    </v-btn>
+    <v-btn
+      icon="mdi-map-marker-account"
+      variant="text"
+      @click="handleUserLocation"
+      :color="selectedUserLocation ? 'red' : ''"
+    >
     </v-btn>
   </v-app-bar>
 
