@@ -36,14 +36,17 @@ export const useTomodatStore = defineStore("tomodat", () => {
   function addNewClient(data) {
     const { lat, lng, name, cto_id } = data;
 
+    const newClient = {
+      name,
+      position: { value: { lat: +lat, lng: +lng } },
+      id: Date.now(),
+    };
+
+    console.log(newClient);
+
     const cto = ctoList.value.find((cto) => cto.id === cto_id);
 
-    if (cto)
-      cto.clients.unshift({
-        name,
-        position: { value: { lat, lng } },
-        id: Date.now(),
-      });
+    if (cto) cto.clients.unshift(newClient);
   }
 
   const getClients = computed(() => {

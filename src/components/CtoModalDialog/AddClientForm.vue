@@ -78,8 +78,8 @@ const handleFormSubmit = async () => {
     const bodyRequest = {
       name: name.value.toUpperCase(),
       pppoe: pppoe.value,
-      lat,
-      lng,
+      lat: lat.toString(),
+      lng: lng.toString(),
       cto_id: id,
       user: "SANDRO",
       cto_name,
