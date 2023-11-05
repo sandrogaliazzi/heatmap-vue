@@ -53,28 +53,20 @@ const handleSubmit = async () => {
 
     try {
       cardLoader.value = true;
-      //   const response = await fetchApi.post("uploadimg", formData, {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //       Accept: "*/*",
-      //     },
-      //   });
+      const response = await fetchApi.post("uploadimg", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Accept: "*/*",
+        },
+      });
 
-      setTimeout(() => {
+      if (response.status == 200) {
         notification.setNotification({
           msg: "Camera adicionada com sucesso",
           status: "success",
         });
-        closeDialog();
-      }, 3000);
-
-      //   if (response.status == 200) {
-      //     notification.setNotification({
-      //       msg: "Camera adicionada com sucesso",
-      //       status: "success",
-      //     });
-      //     resetForm();
-      //   }
+        resetForm();
+      }
     } catch (error) {
       notification.setNotification({
         msg: "erro ao adicionar camera",

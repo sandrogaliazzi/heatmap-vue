@@ -6,6 +6,7 @@ import avatar from "@/assets/avatar.png";
 import DialogBox from "../Dialog/Dialog.vue";
 import SearchCard from "./SearchCard.vue";
 import CameraForm from "./CameraForm.vue";
+import OnuModalDialog from "@/components/OnuModalDialog/OnuModalDialog";
 
 const tomodatStore = useTomodatStore();
 const { selectedCto } = storeToRefs(tomodatStore);
@@ -22,12 +23,15 @@ watch(selectedCto, () => {
 
 const openDialog = ref(false);
 const openCameraDialog = ref(false);
+const openOnuDialog = ref(false);
+const onuKey = ref(1);
 
 const emit = defineEmits(["logout:user"]);
 
 const onCloseDialog = (value) => {
   openDialog.value = value;
   openCameraDialog.value = value;
+  openOnuDialog.value = value;
 };
 </script>
 
@@ -105,6 +109,12 @@ const onCloseDialog = (value) => {
           to="/camera"
         ></v-list-item>
       </v-list-group>
+      <v-list-item
+        prepend-icon="mdi-set-top-box"
+        title="Lista ONU"
+        value="ONU"
+        @click="openOnuDialog = true"
+      ></v-list-item>
     </v-list>
   </v-list>
   <DialogBox :isOpen="openDialog" @update:modalValue="onCloseDialog">
@@ -112,5 +122,8 @@ const onCloseDialog = (value) => {
   </DialogBox>
   <DialogBox :isOpen="openCameraDialog" @update:modalValue="onCloseDialog">
     <CameraForm />
+  </DialogBox>
+  <DialogBox :isOpen="openOnuDialog" @update:modalValue="onCloseDialog">
+    <OnuModalDialog :key="onuKey" @update:force-render="onuKey++" />
   </DialogBox>
 </template>
