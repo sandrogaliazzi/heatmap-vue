@@ -100,6 +100,12 @@ const closeDialog = inject("closeDialog");
         </div>
         <div>
           <v-btn
+            v-if="windowNumer > 1 && windowNumer !== 3"
+            @click="windowNumer--"
+            icon="mdi-arrow-left"
+            variant="text"
+          ></v-btn>
+          <v-btn
             variant="text"
             icon="mdi-reload"
             @click="emit('update:forceRender')"
@@ -139,10 +145,5 @@ const closeDialog = inject("closeDialog");
         </v-window-item>
       </v-window>
     </v-card-text>
-    <v-card-actions v-if="windowNumer > 1 && windowNumer !== 3">
-      <v-btn @click="windowNumer--" color="primary" variant="tonal"
-        >VOLTAR</v-btn
-      >
-    </v-card-actions>
   </v-card>
 </template>

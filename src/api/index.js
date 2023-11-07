@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useAuthStore } from "@/stores/auth";
+import { useUserStore } from "@/stores/user";
 
 const BASE_URL = "https://api.heatmap.conectnet.net/";
 
@@ -16,8 +17,6 @@ const fetchApi = axios.create({
 
 fetchApi.interceptors.response.use(
   (response) => {
-    //console.log(response);
-
     return response;
   },
   (error) => {
@@ -28,6 +27,23 @@ fetchApi.interceptors.response.use(
         const auth = useAuthStore();
         auth.tokenExpired = true;
       }
+    }
+  }
+);
+
+fetchApi.interceptors.request.use(
+  (config) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user) {
+      config.headers["x-access-token"] = user.token;
+    }
+
+    return config;
+  },
+  (error) => {
+    if (error) {
+      return Promise.reject(error);
     }
   }
 );

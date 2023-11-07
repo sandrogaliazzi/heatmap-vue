@@ -7,6 +7,7 @@ import DialogBox from "../Dialog/Dialog.vue";
 import SearchCard from "./SearchCard.vue";
 import CameraForm from "./CameraForm.vue";
 import OnuModalDialog from "@/components/OnuModalDialog/OnuModalDialog";
+import EmailModalDialog from "@/components/EmailModalDialog/EmailModalDialog";
 
 const tomodatStore = useTomodatStore();
 const { selectedCto } = storeToRefs(tomodatStore);
@@ -24,6 +25,7 @@ watch(selectedCto, () => {
 const openDialog = ref(false);
 const openCameraDialog = ref(false);
 const openOnuDialog = ref(false);
+const openEmailDialog = ref(false);
 const onuKey = ref(1);
 
 const emit = defineEmits(["logout:user"]);
@@ -32,6 +34,7 @@ const onCloseDialog = (value) => {
   openDialog.value = value;
   openCameraDialog.value = value;
   openOnuDialog.value = value;
+  openEmailDialog.value = value;
 };
 </script>
 
@@ -72,12 +75,14 @@ const onCloseDialog = (value) => {
         prepend-icon="mdi-camera-account"
         title="Adicionar Câmera"
         value="camera"
+        color="orange"
         @click="openCameraDialog = true"
       ></v-list-item>
       <v-list-item
         prepend-icon="mdi-logout"
         title="Logout"
         value="logout"
+        color="orange"
         @click="emit('logout:user')"
       ></v-list-item>
       <v-list-group value="Dashboard" prepend-icon="mdi-view-dashboard">
@@ -87,18 +92,21 @@ const onCloseDialog = (value) => {
         <v-list-item
           prepend-icon="mdi-monitor-dashboard"
           title="Adm Painel"
+          color="orange"
           value="Dashboard"
           to="/dashboard"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-account-group"
           title="Usuários"
+          color="orange"
           value="users"
           to="/users"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-web"
           title="Ativações"
+          color="orange"
           value="logs"
           to="/logs"
         ></v-list-item>
@@ -106,14 +114,23 @@ const onCloseDialog = (value) => {
           prepend-icon="mdi-cctv"
           title="Câmeras"
           value="cameras"
+          color="orange"
           to="/camera"
         ></v-list-item>
       </v-list-group>
       <v-list-item
         prepend-icon="mdi-set-top-box"
         title="Lista ONU"
+        color="orange"
         value="ONU"
         @click="openOnuDialog = true"
+      ></v-list-item>
+      <v-list-item
+        prepend-icon="mdi-email"
+        title="Emails"
+        color="orange"
+        value="email"
+        @click="openEmailDialog = true"
       ></v-list-item>
     </v-list>
   </v-list>
@@ -125,5 +142,8 @@ const onCloseDialog = (value) => {
   </DialogBox>
   <DialogBox :isOpen="openOnuDialog" @update:modalValue="onCloseDialog">
     <OnuModalDialog :key="onuKey" @update:force-render="onuKey++" />
+  </DialogBox>
+  <DialogBox :isOpen="openEmailDialog" @update:modalValue="onCloseDialog">
+    <EmailModalDialog />
   </DialogBox>
 </template>

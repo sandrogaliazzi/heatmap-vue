@@ -25,8 +25,8 @@ const loadUsers = async () => {
 };
 
 onMounted(async () => {
-  loadUsers();
-  await fetchLogins();
+  await loadUsers();
+  fetchLogins();
   //console.log(loginData.value);
 });
 

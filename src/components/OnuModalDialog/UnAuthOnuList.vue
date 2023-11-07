@@ -40,7 +40,7 @@ const registerOnu = async (onu) => {
 </script>
 
 <template>
-  <v-list lines="two">
+  <v-list lines="three">
     <v-list-subheader>ONUs NÃO AUTORIZADAS</v-list-subheader>
     <v-list-group v-for="onu in onuList" :key="onu.onuMac">
       <template #activator="{ props }">
