@@ -35,16 +35,19 @@ const getUnauthorizedOnuInfo = async () => {
     const promiseList = oltIpList.map(async (oltIp) => {
       const response = await fetchApi.post("listar-onu", { oltIp });
 
-      const [data] = response.data;
-
-      return { ...data, oltIp };
+      return [...response.data, oltIp];
     });
 
     const results = await Promise.all(promiseList);
 
-    console.log(results);
+    return results.reduce((onuList, data) => {
+      if (data.length > 1) {
+        const oltIp = data.pop();
+        data.forEach((onu) => onuList.push({ ...onu, oltIp }));
+      }
 
-    return results.filter((result) => Object.keys(result).length > 1);
+      return onuList;
+    }, []);
   } catch (error) {
     console.log("erro ao consultar olts", error.message);
     loadingApi.value = false;

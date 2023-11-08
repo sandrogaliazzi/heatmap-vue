@@ -23,7 +23,7 @@ const { source } = defineProps(["source"]);
       </v-avatar>
     </template>
     <v-list-item-subtitle v-if="source.city">
-      {{ source.city }}
+      {{ source.city == "ZCLIENTES NÃO VERIFICADOS" ? "ARARICA" : source.city }}
     </v-list-item-subtitle>
 
     <template v-slot:append>

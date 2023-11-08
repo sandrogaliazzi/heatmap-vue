@@ -112,7 +112,7 @@ const handleSubmit = async () => {
               <v-col cols="12">
                 <v-text-field
                   label="Senha"
-                  v-model="password"
+                  v-model.trim="password"
                   :type="passwordVisible ? 'text' : 'password'"
                   placeholder="digite a senha"
                   prepend-icon="mdi-account-lock"

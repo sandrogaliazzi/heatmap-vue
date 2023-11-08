@@ -183,7 +183,7 @@ const onClientPositionSelected = async ({ client, position }) => {
       </div>
     </v-card-title>
     <v-card-subtitle class="mt-3 font-weight-bold"
-      >{{ cto.city }}
+      >{{ cto.city == "ZCLIENTES NÃO VERIFICADOS" ? "ARARICA" : cto.city }}
       |
       <span :class="handleSplliterStatus.className">
         {{ handleSplliterStatus.statusMsg.toLocaleUpperCase() }}
