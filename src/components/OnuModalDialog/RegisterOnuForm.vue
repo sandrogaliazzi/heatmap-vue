@@ -15,6 +15,7 @@ const cto = ref("");
 const tecnico = ref("");
 const userStore = useUserStore();
 const loadingSubmit = ref(false);
+const isDisabledVlanInput = ref(true);
 
 const inputRules = [
   (value) => {
@@ -45,7 +46,11 @@ const handleSubmit = async () => {
       onuModel: formData.onuModel,
       oltRamal: formData.oltRamal,
       onuAlias: toParksTextFormat(onuAlias.value),
+      sinalTX: formData["Power Level"],
+      sinalRX: formData["RSSI"],
     };
+
+    console.log(requestBody);
 
     try {
       const response = await fetchApi.post("liberar-onu", requestBody);
@@ -72,17 +77,39 @@ const handleSubmit = async () => {
     <v-row>
       <v-col cols="6">
         <v-text-field
-          class="mb-2"
           :label="formData.onuMac.toUpperCase()"
           disabled
         ></v-text-field>
       </v-col>
       <v-col cols="6">
         <v-text-field
-          class="mb-2"
           :label="`${formData['Power Level']} ${formData['RSSI']}`"
           disabled
         ></v-text-field>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col cols="6">
+        <v-text-field
+          v-model="cto"
+          :rules="inputRules"
+          clearable
+          label="CTO"
+          prepend-inner-icon="mdi-cube"
+          placeholder="Digite o nome da cto"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="6">
+        <v-text-field
+          v-model="formData.ponVlan"
+          label="VLAN"
+          prepend-inner-icon="mdi-web"
+          append-inner-icon="mdi-pencil"
+          @click:append-inner="isDisabledVlanInput = !isDisabledVlanInput"
+          :readonly="isDisabledVlanInput"
+        >
+        </v-text-field>
       </v-col>
     </v-row>
 
@@ -93,15 +120,6 @@ const handleSubmit = async () => {
       label="CLIENTE"
       prepend-inner-icon="mdi-account"
       placeholder="Digite o nome da cliente"
-    ></v-text-field>
-
-    <v-text-field
-      v-model="cto"
-      :rules="inputRules"
-      clearable
-      label="CTO"
-      prepend-inner-icon="mdi-cube"
-      placeholder="Digite o nome da cto"
     ></v-text-field>
 
     <v-text-field

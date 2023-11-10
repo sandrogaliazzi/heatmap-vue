@@ -57,7 +57,7 @@ const createEmail = async () => {
 </script>
 
 <template>
-  <v-card style="min-height: 600px; max-height: 700px">
+  <v-card style="min-height: 600px">
     <v-card-title class="bg-orange">
       <div class="d-flex justify-space-between align-center">
         <div class="d-flex">

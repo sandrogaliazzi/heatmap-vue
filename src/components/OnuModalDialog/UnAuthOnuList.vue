@@ -46,7 +46,7 @@ const registerOnu = async (onu) => {
       <template #activator="{ props }">
         <v-list-item
           v-bind="props"
-          :title="onu.onuMac.toUpperCase()"
+          :title="`${onu.onuMac.toUpperCase()} ${onu.oltName}`"
           :value="onu.onuMac"
           prepend-icon="mdi-circle-box"
         >
