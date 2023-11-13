@@ -53,6 +53,7 @@ watch(query, () => {
     <v-card-text class="px-0 pt-0">
       <v-text-field
         placeholder="Nome do cliente ou cto"
+        clearable
         prepend-inner-icon="mdi-magnify"
         v-model="query"
       >

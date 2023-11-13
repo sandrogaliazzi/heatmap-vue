@@ -18,6 +18,7 @@ const props = defineProps([
   "openGmapTab",
   "ctoPosition",
   "slideNumber",
+  "userLocation",
 ]);
 const emit = defineEmits([
   "positionSelected",
@@ -92,6 +93,14 @@ watch(isMapVisible, () => (positionClicked.value = null));
           :icon="ctoIcon"
           :clickable="true"
           @click="showAllInfoWindow = !showAllInfoWindow"
+        />
+        <GMapMarker
+          v-if="userLocation"
+          :position="{
+            lat: userLocation.latitude,
+            lng: userLocation.longitude,
+          }"
+          :animation="1"
         />
         <template v-if="hasLocatedClients && isClientMarkersVisible">
           <GMapMarker

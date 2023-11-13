@@ -13,6 +13,7 @@ const closeDialog = inject("closeDialog");
 const isMapVisible = ref(true);
 const slideNumber = ref(1);
 const positionClicked = ref({ lat: "", lng: "" });
+const userLocation = ref(null);
 
 const center = computed(() => {
   return {
@@ -67,6 +68,26 @@ const resetPosition = () => (positionClicked.value = { lat: "", lng: "" });
 watch(slideNumber, () => {
   if (slideNumber.value === 1) resetPosition();
 });
+
+const handleUserLocation = () => {
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      if (!userLocation.value) {
+        userLocation.value = pos.coords;
+      } else {
+        userLocation.value = null;
+      }
+    },
+    (error) => {
+      console.log(error);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    }
+  );
+};
 
 const onPositionSelected = (position) => (positionClicked.value = position);
 
@@ -162,6 +183,12 @@ const onClientPositionSelected = async ({ client, position }) => {
       </p>
       <div>
         <v-btn
+          icon="mdi-map-marker"
+          :color="userLocation ? 'red' : ''"
+          variant="text"
+          @click="handleUserLocation"
+        />
+        <v-btn
           v-if="slideNumber < 2"
           icon="mdi-account-plus"
           variant="plain"
@@ -194,6 +221,7 @@ const onClientPositionSelected = async ({ client, position }) => {
       :center="mapCenter"
       :ctoPosition="center"
       :clients="cto.clients"
+      :userLocation="userLocation"
       :openGmapTab="openNewGMapTab"
       :slideNumber="slideNumber"
       :isMapVisible="isMapVisible || slideNumber == 2"
