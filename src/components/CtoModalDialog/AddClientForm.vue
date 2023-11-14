@@ -2,11 +2,13 @@
 import { defineProps, defineEmits, toRefs, ref, watch } from "vue";
 import { useNotificationStore } from "@/stores/notification";
 import { useTomodatStore } from "@/stores/tomodat";
+import { useUserStore } from "@/stores/user";
 import formValidationRules from "./formValidationRules";
 import fetchApi from "@/api";
 
 const notification = useNotificationStore();
 const tomodat = useTomodatStore();
+const userStore = useUserStore();
 
 const props = defineProps(["clientPosition", "cto"]);
 const emit = defineEmits(["slideBack"]);
@@ -81,7 +83,7 @@ const handleFormSubmit = async () => {
       lat: lat.toString(),
       lng: lng.toString(),
       cto_id: id,
-      user: "SANDRO",
+      user: userStore.user.name,
       cto_name,
       date_time: new Date().toLocaleString("pt-BR"),
     };
