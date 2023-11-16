@@ -4,6 +4,7 @@ import { ref, computed, watch, inject } from "vue";
 import CtoMap from "./CtoMap.vue";
 import CtoClientsList from "./CtoClientsList.vue";
 import AddClientForm from "./AddClientForm.vue";
+import ClientesOnuCard from "../ClientesOnuModalDialog/ClientesOnuCard.vue";
 import fetchApi from "@/api";
 
 const { cto } = defineProps(["cto"]);
@@ -14,6 +15,7 @@ const isMapVisible = ref(true);
 const slideNumber = ref(1);
 const positionClicked = ref({ lat: "", lng: "" });
 const userLocation = ref(null);
+const showOnuCard = ref(false);
 
 const center = computed(() => {
   return {
@@ -261,6 +263,21 @@ const onClientPositionSelected = async ({ client, position }) => {
         </v-card-actions>
       </v-window-item>
     </v-window>
+    <v-card-actions>
+      <v-btn
+        block
+        variant="tonal"
+        color="primary"
+        @click="showOnuCard = !showOnuCard"
+      >
+        verfificar sinal
+      </v-btn>
+    </v-card-actions>
+    <ClientesOnuCard v-if="showOnuCard">
+      <template #header>
+        <span class="d-none"></span>
+      </template>
+    </ClientesOnuCard>
   </v-card>
 </template>
 
