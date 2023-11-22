@@ -59,18 +59,33 @@ const signalCalc = computed(() => {
 const formatSigal = (signal) => {
   return signal.split(" ")[0];
 };
+
+const checkAllSignal = (onuList) => {
+  onuList.forEach(async (onu) => {
+    await checkOnuSignal(onu);
+  });
+};
 </script>
 
 <template>
   <v-list lines="two">
     <v-list-subheader>
-      <v-chip color="success"
+      <v-chip color="success" v-if="!isNaN(signalCalc.tx)"
         >Média sinal | TX:{{ signalCalc.tx }} RX: {{ signalCalc.rx }}
       </v-chip>
+
+      <v-btn
+        color="success"
+        rounded="xl"
+        variant="tonal"
+        @click="checkAllSignal(onuList)"
+        v-else-if="isNaN(signalCalc.tx) && onuList.length <= 16"
+        >Calcular sinal
+      </v-btn>
     </v-list-subheader>
     <v-virtual-scroll
       class="pt-0"
-      height="600"
+      height="400"
       item-height="50"
       :items="onuList"
     >
@@ -83,8 +98,19 @@ const formatSigal = (signal) => {
               prepend-icon="mdi-circle-box"
               :value="item.mac"
               :title="item.name"
-              :subtitle="item.mac"
             >
+              <v-list-item-subtitle>
+                <span class="text-disabled me-2">{{ item.mac }}</span>
+                <v-chip
+                  size="small"
+                  color="primary"
+                  class="d-none d-md-inline-flex"
+                  v-if="signalList[item.mac]"
+                  >TX:
+                  {{ formatSigal(signalList[item.mac]["Power Level"]) }} RX:
+                  {{ formatSigal(signalList[item.mac]["RSSI"]) }}</v-chip
+                >
+              </v-list-item-subtitle>
             </v-list-item>
           </template>
           <v-list-item>

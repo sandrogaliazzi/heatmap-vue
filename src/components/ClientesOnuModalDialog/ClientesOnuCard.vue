@@ -3,18 +3,11 @@ import { inject, ref, onMounted, computed, watch } from "vue";
 import OnuList from "./OnuList.vue";
 import fetchApi from "@/api";
 
+const { clients } = defineProps(["clients"]);
+
 const onuList = ref([]);
 const closeDialog = inject("closeDialog");
 const query = ref("");
-const selectedOlt = ref([
-  {
-    ip: "192.168.202.2",
-    name: "PARKS 1",
-  },
-]);
-
-const selectAllOlt = ref(false);
-
 const olts = [
   {
     ip: "192.168.202.2",
@@ -51,7 +44,7 @@ const olts = [
 ];
 
 const fetchAllOnu = async () => {
-  const promiseList = selectedOlt.value.map(async (olt) => {
+  const promiseList = olts.map(async (olt) => {
     const onuData = await fetchApi.post("verificar-onu-name-olt", {
       oltIp: olt.ip,
     });
@@ -68,25 +61,6 @@ watch(query, () => {
   }
 });
 
-watch(selectedOlt, async () => {
-  if (!selectedOlt.value.length) {
-    alert("Selecione no mínimo uma olt");
-  } else {
-    await fetchAllOnu();
-  }
-});
-
-watch(selectAllOlt, () => {
-  selectAllOlt.value
-    ? (selectedOlt.value = olts.slice())
-    : (selectedOlt.value = [
-        {
-          ip: "192.168.202.2",
-          name: "PARKS 1",
-        },
-      ]);
-});
-
 const filterOnuList = computed(() => {
   return onuList.value.filter((onu) => {
     if (onu.name) {
@@ -95,20 +69,43 @@ const filterOnuList = computed(() => {
   });
 });
 
-const itemProps = (item) => {
-  return {
-    title: item.name,
-    subtitle: item.ip,
-  };
+const findOnuListFromCto = () => {
+  if (!clients) return;
+
+  const names = clients.map((client) => {
+    let nameWithHifen = "";
+    if (client.name.includes("(")) {
+      nameWithHifen = client.name.split("(")[0].trim().replaceAll(" ", "-");
+    } else {
+      nameWithHifen = client.name.trim().split(" ").join("-");
+    }
+
+    return nameWithHifen;
+  });
+
+  const onuMatchList = names
+    .map((n) => {
+      const onu = onuList.value.find((onu) => onu.name == n);
+
+      return onu ? onu : false;
+    })
+    .filter((data) => data);
+
+  if (!onuMatchList.length) {
+    alert("Clientes não identificados na olt");
+  } else {
+    onuList.value = onuMatchList;
+  }
 };
 
-onMounted(() => {
-  fetchAllOnu();
+onMounted(async () => {
+  await fetchAllOnu();
+  findOnuListFromCto();
 });
 </script>
 
 <template>
-  <v-card style="min-height: 450px">
+  <v-card style="min-height: 450px" class="overflow-auto">
     <slot name="header">
       <v-card-title class="bg-orange">
         <div class="d-flex justify-space-between align-center">
@@ -136,24 +133,18 @@ onMounted(() => {
               class="mb-3"
             ></v-text-field>
           </v-col>
-          <v-col cols="12">
-            <v-select
-              label="Selecionar OLT"
-              v-model="selectedOlt"
-              multiple
-              :items="olts"
-              :item-props="itemProps"
-            ></v-select>
-            <v-checkbox
-              label="selecionar todas as olts"
-              v-model="selectAllOlt"
-            ></v-checkbox>
-          </v-col>
         </v-row>
         <v-row no-gutters>
           <v-col cols="12">
             <div v-if="onuList.length">
               <OnuList :onu-list="filterOnuList || onuList" />
+              <v-btn
+                v-if="onuList.length <= 16"
+                color="primary"
+                @click="fetchAllOnu"
+                variant="tonal"
+                >VER TODOS</v-btn
+              >
             </div>
             <div v-else>
               <div class="d-flex justify-center align-center">
