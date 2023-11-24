@@ -9,11 +9,25 @@ const signalList = ref({});
 
 const checkOnuSignal = async (onu) => {
   isLoadingSignal.value = true;
-  const signal = await fetchApi.post("verificar-onu-completo", {
-    oltIp: onu.oltIp,
-    onuAlias: onu.mac,
-  });
-  if (!signalList.value[onu.mac]) signalList.value[onu.mac] = signal.data;
+  const signal = await fetchApi.post(
+    "verificar-onu-completo",
+    {
+      oltIp: onu.oltIp,
+      onuAlias: onu.mac,
+    },
+    {
+      headers: {
+        "Cache-Control": "no-cache",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+      params: {
+        t: new Date().getTime(),
+      },
+    }
+  );
+
+  signalList.value[onu.mac] = signal.data;
   isLoadingSignal.value = false;
 };
 
@@ -60,10 +74,14 @@ const formatSigal = (signal) => {
   return signal.split(" ")[0];
 };
 
-const checkAllSignal = (onuList) => {
-  onuList.forEach(async (onu) => {
-    await checkOnuSignal(onu);
-  });
+const formatVlan = (vlan) => {
+  return vlan?.split("_").pop();
+};
+
+const checkAllSignal = async (onuList) => {
+  const signals = onuList.map(async (onu) => await checkOnuSignal(onu));
+
+  await Promise.all(signals);
 };
 </script>
 
@@ -71,13 +89,15 @@ const checkAllSignal = (onuList) => {
   <v-list lines="two">
     <v-list-subheader>
       <v-chip color="success" v-if="!isNaN(signalCalc.tx)"
-        >Média sinal | TX:{{ signalCalc.tx }} RX: {{ signalCalc.rx }}
+        >Média sinal | TX:{{ signalCalc.tx.toFixed(2) }} RX:
+        {{ signalCalc.rx.toFixed(2) }}
       </v-chip>
 
       <v-btn
         color="success"
         rounded="xl"
         variant="tonal"
+        :loading="isLoadingSignal"
         @click="checkAllSignal(onuList)"
         v-else-if="isNaN(signalCalc.tx) && onuList.length <= 16"
         >Calcular sinal
@@ -100,10 +120,16 @@ const checkAllSignal = (onuList) => {
               :title="item.name"
             >
               <v-list-item-subtitle>
-                <span class="text-disabled me-2">{{ item.mac }}</span>
+                <span class="text-disabled me-2"
+                  >{{ item.mac }} VLAN: {{ formatVlan(item.flowProfile) }}</span
+                >
                 <v-chip
                   size="small"
-                  color="primary"
+                  :color="
+                    signalList[item.mac]['Power Level'] == 'NO SIGNAL'
+                      ? 'error'
+                      : 'primary'
+                  "
                   class="d-none d-md-inline-flex"
                   v-if="signalList[item.mac]"
                   >TX:

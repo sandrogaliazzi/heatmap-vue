@@ -85,7 +85,7 @@ const findOnuListFromCto = () => {
 
   const onuMatchList = names
     .map((n) => {
-      const onu = onuList.value.find((onu) => onu.name == n);
+      const onu = onuList.value.find((onu) => onu?.name?.includes(n));
 
       return onu ? onu : false;
     })
