@@ -1,5 +1,5 @@
 <script setup>
-import { inject } from "vue";
+import { inject, watch } from "vue";
 import { useTomodatStore } from "@/stores/tomodat";
 
 const closeDialog = inject("closeDialog");
@@ -16,7 +16,11 @@ const { source } = defineProps(["source"]);
 </script>
 
 <template>
-  <v-list-item :title="source.name" :value="source.name">
+  <v-list-item
+    :title="source.name"
+    :value="source.name"
+    @click="console.log(source)"
+  >
     <template v-slot:prepend>
       <v-avatar color="grey-lighten-1">
         <v-icon color="white">mdi-google-maps</v-icon>
@@ -24,6 +28,9 @@ const { source } = defineProps(["source"]);
     </template>
     <v-list-item-subtitle v-if="source.city">
       {{ source.city == "ZCLIENTES NÃO VERIFICADOS" ? "ARARICA" : source.city }}
+    </v-list-item-subtitle>
+    <v-list-item-subtitle v-else>
+      {{ source.ctoName }}
     </v-list-item-subtitle>
 
     <template v-slot:append>
