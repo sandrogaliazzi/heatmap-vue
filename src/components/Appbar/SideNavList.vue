@@ -25,6 +25,7 @@ watch(selectedCto, () => {
 });
 
 const openDialog = ref(false);
+
 const openCameraDialog = ref(false);
 const openOnuDialog = ref(false);
 const openEmailDialog = ref(false);

@@ -1,10 +1,14 @@
 <script setup>
-import { ref, watch, inject } from "vue";
+import { ref, watch, inject, onMounted } from "vue";
 import fetchApi from "@/api";
 import { useNotificationStore } from "@/stores/notification";
+import axios from "axios";
+
+const { camera } = defineProps(["camera"]);
 
 const clientCameraName = ref("");
 const serialNumber = ref("");
+const cameraId = ref(null);
 const files = ref([]);
 const selectedImages = ref([]);
 const checkSelectedFiles = ref(false);
@@ -75,6 +79,14 @@ const handleSubmit = async () => {
     }
   }
 };
+
+onMounted(() => {
+  if (camera) {
+    clientCameraName.value = camera.clientCameraName;
+    serialNumber.value = camera.serialNumber;
+    cameraId.value = camera._id;
+  }
+});
 </script>
 
 <template>
@@ -103,6 +115,8 @@ const handleSubmit = async () => {
         class="mb-3"
         id="cameraForm"
       >
+        <v-text-field v-model="cameraId" name="id" v-show="false">
+        </v-text-field>
         <v-text-field
           v-model="clientCameraName"
           name="clientCameraName"

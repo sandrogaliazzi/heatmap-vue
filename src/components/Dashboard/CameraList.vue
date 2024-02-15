@@ -1,18 +1,24 @@
 <script setup>
 import fetchApi from "@/api";
 import DialogBox from "../Dialog/Dialog.vue";
+import CameraForm from "../AppBar/CameraForm.vue";
 import { ref, onMounted, computed } from "vue";
 
 const cameras = ref([]);
+const camera = ref({});
 const urlImgList = ref([]);
 
 const query = ref("");
 const dialog = ref(false);
+const cameraDialog = ref(false);
+const loading = ref(true);
 
 const onCloseDialog = (value) => (dialog.value = value);
 
 const fetchCameras = async () => {
   const response = await fetchApi("getallcameras");
+
+  loading.value = false;
 
   cameras.value = response.data;
 };
@@ -63,6 +69,11 @@ const readImgFiles = async (files) => {
     return imageUrl;
   });
 };
+
+const cameraEdit = (selectedCamera) => {
+  camera.value = selectedCamera;
+  cameraDialog.value = true;
+};
 </script>
 
 <template>
@@ -95,6 +106,12 @@ const readImgFiles = async (files) => {
         </v-card-text>
       </v-card>
     </DialogBox>
+    <DialogBox
+      :is-open="cameraDialog"
+      @update:modal-value="cameraDialog = false"
+    >
+      <CameraForm :camera="camera" />
+    </DialogBox>
     <v-col cols="12" md="10" class="fixed-column">
       <v-form>
         <v-text-field
@@ -104,12 +121,30 @@ const readImgFiles = async (files) => {
           single-line
           hide-details
           v-model="query"
+          :loading="loading"
         >
         </v-text-field>
       </v-form>
     </v-col>
     <v-col cols="12" md="10" class="scrollable-column">
       <v-list nav lines="three">
+        <div v-if="loading">
+          <v-list-item>
+            <div
+              class="d-flex justify-center align-center text-center"
+              style="min-height: 500px"
+            >
+              <div>
+                <v-progress-circular
+                  indeterminate
+                  :size="128"
+                  :width="8"
+                  color="orange"
+                ></v-progress-circular>
+              </div>
+            </div>
+          </v-list-item>
+        </div>
         <div v-if="query && !filteredResults.length">
           <v-list-item>
             <div
@@ -151,13 +186,20 @@ const readImgFiles = async (files) => {
                   {{ camera.serialNumber }}
                 </v-chip>
                 <v-btn
-                  prepend-icon="mdi-qrcode-scan"
+                  icon="mdi-qrcode-scan"
                   variant="tonal"
                   color="success"
                   class="ma-2"
                   @click="getCameraImgPath(camera)"
-                  >Abrir</v-btn
+                ></v-btn>
+                <v-btn
+                  icon="mdi-qrcode-edit"
+                  variant="tonal"
+                  color="orange"
+                  class="ma-2"
+                  @click="cameraEdit(camera)"
                 >
+                </v-btn>
               </div>
             </template>
           </v-list-item>
