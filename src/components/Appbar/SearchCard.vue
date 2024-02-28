@@ -25,18 +25,23 @@ const getClientsByName = (name) => {
 watch(query, () => {
   if (!query.value) searchResults.value = [];
   if (query.value) {
-    const typeOfSearch = /^R\d+(?:-[\w\d]+)?$/.test(query.value.toUpperCase())
-      ? "cto"
-      : "client";
+    if (
+      query.value.split(" ").length > 1 ||
+      query.value.split("-").length > 1
+    ) {
+      const typeOfSearch = /^R\d+(?:-[\w\d]+)?$/.test(query.value.toUpperCase())
+        ? "cto"
+        : "client";
 
-    switch (typeOfSearch) {
-      case "cto":
-        searchResults.value = getCtoByName(query.value);
-        break;
+      switch (typeOfSearch) {
+        case "cto":
+          searchResults.value = getCtoByName(query.value);
+          break;
 
-      case "client":
-        searchResults.value = getClientsByName(query.value);
-        break;
+        case "client":
+          searchResults.value = getClientsByName(query.value);
+          break;
+      }
     }
   }
   localStorage.setItem("lastQuery", query.value);

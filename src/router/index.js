@@ -7,6 +7,7 @@ import AdminPanel from "@/components/Dashboard/AdminPanel";
 import UserList from "@/components/Dashboard/UserList";
 import LogsList from "@/components/Dashboard/LogsList";
 import CameraList from "@/components/Dashboard/CameraList";
+import DashboardComercial from "@/views/DashboardComercialView";
 
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
@@ -55,6 +56,11 @@ const router = createRouter({
       ],
     },
     {
+      path: "/comercial",
+      name: "Comercial",
+      component: DashboardComercial,
+    },
+    {
       path: "/:pathMatch(.*)*",
       component: PageNotFoundView,
     },
@@ -64,12 +70,16 @@ const router = createRouter({
 router.beforeEach((to, from) => {
   const user = useUserStore();
   const { isAuthenticated } = storeToRefs(user);
+
+  //if (to.name == "Comercial") return { name: "Comercial" };
+
   if (
     // make sure the user is authenticated
     !isAuthenticated.value &&
     !localStorage.getItem("user") &&
     // ❗️ Avoid an infinite redirect
-    to.name !== "Login"
+    to.name !== "Login" &&
+    to.name !== "Comercial"
   ) {
     // redirect the user to the login page
     return { name: "Login" };
