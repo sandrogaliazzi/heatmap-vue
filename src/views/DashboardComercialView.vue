@@ -1,98 +1,76 @@
 <script setup>
-import { ref, computed } from "vue";
-const sellersData = ref([
-  {
-    type: 1,
-    seller: "FELIPE",
-    sellerID: 1,
-    monthSales: 20,
-    weekSales: 5,
-    dailySales: 2,
-  },
-  {
-    type: 1,
-    seller: "JEFERSON",
-    sellerID: 2,
-    monthSales: 17,
-    weekSales: 4,
-    dailySales: 3,
-  },
-  {
-    type: 1,
-    seller: "LUIS FELIPE",
-    sellerID: 3,
-    monthSales: 15,
-    weekSales: 3,
-    dailySales: 2,
-  },
-  {
-    type: 0,
-    seller: "NADINE",
-    sellerID: 4,
-    monthSales: 18,
-    weekSales: 4,
-    dailySales: 2,
-  },
-  {
-    type: 0,
-    seller: "JANICE",
-    sellerID: 5,
-    monthSales: 17,
-    weekSales: 3,
-    dailySales: 1,
-  },
-]);
+import { ref, computed, onMounted } from "vue";
+import moment from "moment-timezone";
+import SalesCard from "@/components/Dashboard/Comercial/SalesCard";
+import HeaderCard from "@/components/Dashboard/Comercial/HeaderCard.vue";
+import MetricsCard from "@/components/Dashboard/Comercial/MetricsCard";
+import fetchApi from "@/api";
 
-const avatar = ref({
-  FELIPE: "https://randomuser.me/api/portraits/men/1.jpg",
-  "LUIS FELIPE": "https://randomuser.me/api/portraits/men/2.jpg",
-  JEFERSON: "https://randomuser.me/api/portraits/men/3.jpg",
-  JANICE: "https://randomuser.me/api/portraits/women/1.jpg",
-  NADINE: "https://randomuser.me/api/portraits/women/2.jpg",
+const metrics = ref([]);
+const currentMetric = ref({});
+
+const sales = ref([]);
+const nextKey = ref(0);
+
+function getWeekNumber(date) {
+  // Configurando o fuso horário para Brasília
+  moment.tz.setDefault("America/Sao_Paulo");
+
+  // Obtendo a data atual no fuso horário de Brasília
+  const momentDate = date ? moment(date) : moment();
+
+  // Obtendo o número da semana atual
+  const weekNumber = momentDate.isoWeek();
+
+  return weekNumber;
+}
+
+const salesCount = computed(() => {
+  return {
+    day: sales.value.dailySales?.length,
+    week: sales.value.weekSales?.length,
+    total: sales.value.sales?.length,
+  };
 });
 
-const externalSales = computed(() => {
-  return sellersData.value.filter((seller) => seller.type);
-});
+const updateMetric = (metric) => {
+  currentMetric.value = metric;
+  nextKey.value++;
+  fetchSales();
+};
 
-const internalSales = computed(() => {
-  return sellersData.value.filter((seller) => !seller.type);
-});
+const fetchGoals = async () => {
+  const response = await fetchApi("/goals");
+  metrics.value = response.data;
+  currentMetric.value = metrics.value[metrics.value.length - 1];
+  nextKey.value++;
+};
 
-const dailySalesEx = computed(() => {
-  return externalSales.value.sort((salesA, salesB) => {
-    return salesB.dailySales - salesA.dailySales;
+const fetchSales = async () => {
+  const response = await fetchApi.post("/sales", {
+    metricRef: currentMetric.value._id,
+    weekRef: getWeekNumber(),
   });
-});
 
-const weekSalesEx = computed(() => {
-  return externalSales.value.sort((salesA, salesB) => {
-    return salesB.weekSales - salesA.weekSales;
-  });
-});
+  sales.value = response.data;
+};
 
-const monthSalesEx = computed(() => {
-  return externalSales.value.sort((salesA, salesB) => {
-    return salesB.monthSales - salesA.monthSales;
-  });
-});
+const fetchData = async () => {
+  await fetchGoals();
+  await fetchSales();
+};
 
-const dailySalesIn = computed(() => {
-  return internalSales.value.sort((salesA, salesB) => {
-    return salesB.dailySales - salesA.dailySales;
-  });
-});
+const refreshSales = () => {
+  setInterval(() => {
+    fetchSales();
+    console.log("atualizado");
+  }, 15000);
+};
 
-const weekSalesIn = computed(() => {
-  return internalSales.value.sort((salesA, salesB) => {
-    return salesB.weekSales - salesA.weekSales;
-  });
-});
+refreshSales();
 
-const monthSalesIn = computed(() => {
-  return internalSales.value.sort((salesA, salesB) => {
-    return salesB.monthSales - salesA.monthSales;
-  });
+onMounted(async () => {
+  await fetchData();
 });
 </script>
 
@@ -100,172 +78,47 @@ const monthSalesIn = computed(() => {
   <v-container>
     <v-row>
       <v-col>
-        <v-card
-          title="METAS SETOR COMERCIAL"
-          append-icon="mdi-chart-line"
-        ></v-card>
+        <!-- HEADER -->
+        <HeaderCard
+          v-if="metrics.length > 0"
+          @update-metric="(metric) => updateMetric(metric)"
+          @update-component="() => fetchGoals()"
+          @update-sale="() => fetchSales()"
+          :metrics="metrics"
+          :metric="currentMetric"
+          :key="nextKey"
+        />
       </v-col>
     </v-row>
     <v-row justify="center">
-      <v-col>
-        <v-card>
-          <v-card-title>
-            <div class="d-flex justify-space-between">
-              <p>VENDAS MENSAIS</p>
-              <p>150/400</p>
-            </div>
-          </v-card-title>
-        </v-card>
-      </v-col>
-      <v-col>
-        <v-card>
-          <v-card-title>
-            <div class="d-flex justify-space-between">
-              <p>VENDAS SEMANAIS</p>
-              <p>25/100</p>
-            </div>
-          </v-card-title>
-        </v-card>
-      </v-col>
-      <v-col>
-        <v-card>
-          <v-card-title>
-            <div class="d-flex justify-space-between">
-              <p>VENDAS DIARIAS</p>
-              <p>5/25</p>
-            </div>
-          </v-card-title>
-        </v-card>
-      </v-col>
+      <MetricsCard
+        title="VENDAS MENSAIS"
+        :metric="currentMetric.monthSales"
+        :numberOfSales="salesCount.total"
+      />
+      <MetricsCard
+        title="VENDAS SEMANAIS"
+        :metric="currentMetric.weekSales"
+        :numberOfSales="salesCount.week"
+      />
+      <MetricsCard
+        title="VENDAS DIARIAS"
+        :metric="currentMetric.dailySales"
+        :numberOfSales="salesCount.day"
+      />
     </v-row>
-    <v-row>
-      <v-col>
-        <v-card title="Vendas Mensais" subtitle="Externas">
-          <v-card-text>
-            <v-list density="compact" lines="one">
-              <v-list-item
-                v-for="sale in monthSalesEx"
-                :value="sale.sellerID"
-                :key="sale.seller"
-                :prepend-avatar="avatar[sale.seller]"
-              >
-                <v-list-item-title v-if="sale.type">
-                  <div class="d-flex">
-                    <span>{{ sale.seller }}</span>
-                    <span class="ml-5">{{ sale.monthSales }}</span>
-                  </div>
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-card-text>
-        </v-card>
+    <v-row v-if="sales.sales">
+      <v-col cols="12" md="4">
+        <SalesCard title="Vendas Mês" :sales="sales.sales" />
       </v-col>
-      <v-col>
-        <v-card title="Vendas Semanais" subtitle="Externas">
-          <v-card-text>
-            <v-list density="compact">
-              <v-list-item
-                v-for="sale in weekSalesEx"
-                :key="sale.seller"
-                :value="sale.sellerID"
-                :prepend-avatar="avatar[sale.seller]"
-              >
-                <v-list-item-title>
-                  <div class="d-flex">
-                    <p>{{ sale.seller }}</p>
-                    <p class="ml-5">{{ sale.weekSales }}</p>
-                  </div>
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-card-text>
-        </v-card>
+      <v-col cols="12" md="4">
+        <SalesCard title="Vendas Semana" :sales="sales.weekSales" />
       </v-col>
-      <v-col>
-        <v-card title="Vendas Diarias" subtitle="Externas">
-          <v-card-text>
-            <v-list density="compact">
-              <v-list-item
-                v-for="sale in dailySalesEx"
-                :key="sale.seller"
-                :value="sale.sellerID"
-                :prepend-avatar="avatar[sale.seller]"
-              >
-                <v-list-item-title>
-                  <div class="d-flex">
-                    <p>{{ sale.seller }}</p>
-                    <p class="ml-5">{{ sale.dailySales }}</p>
-                  </div>
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-card title="Vendas Mensais" subtitle="Internas">
-          <v-card-text>
-            <v-list density="compact">
-              <v-list-item
-                v-for="sale in monthSalesIn"
-                :key="sale.seller"
-                :value="sale.sellerID"
-                :prepend-avatar="avatar[sale.seller]"
-              >
-                <v-list-item-title>
-                  <div class="d-flex">
-                    <span>{{ sale.seller }}</span>
-                    <span class="ml-5">{{ sale.monthSales }}</span>
-                  </div>
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col>
-        <v-card title="Vendas Semanais" subtitle="Internas">
-          <v-card-text>
-            <v-list density="compact">
-              <v-list-item
-                v-for="sale in weekSalesIn"
-                :key="sale.seller"
-                :value="sale.sellerID"
-                :prepend-avatar="avatar[sale.seller]"
-              >
-                <v-list-item-title>
-                  <div class="d-flex">
-                    <p>{{ sale.seller }}</p>
-                    <p class="ml-5">{{ sale.weekSales }}</p>
-                  </div>
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col>
-        <v-card title="Vendas Diarias" subtitle="Internas">
-          <v-card-text>
-            <v-list density="compact">
-              <v-list-item
-                v-for="sale in dailySalesIn"
-                :key="sale.seller"
-                :value="sale.sellerID"
-                :prepend-avatar="avatar[sale.seller]"
-              >
-                <v-list-item-title>
-                  <div class="d-flex">
-                    <p>{{ sale.seller }}</p>
-                    <p class="ml-5">{{ sale.dailySales }}</p>
-                  </div>
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-card-text>
-        </v-card>
+      <v-col cols="12" md="4">
+        <SalesCard
+          :title="'Vendas ' + new Date().toLocaleDateString()"
+          :sales="sales.dailySales"
+        />
       </v-col>
     </v-row>
   </v-container>
