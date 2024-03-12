@@ -41,8 +41,8 @@ const fetchSales = async (seller) => {
           </v-dialog>
           <v-list-item-title>
             <div class="d-flex">
-              <span>{{ seller.name }}</span>
-              <span class="ml-5">{{
+              <span class="text-emphasis">{{ seller.name }}</span>
+              <span class="ml-5 text-emphasis">{{
                 sales.filter((sale) => sale.seller == seller.name).length
               }}</span>
             </div>
@@ -65,8 +65,8 @@ const fetchSales = async (seller) => {
           </v-dialog>
           <v-list-item-title>
             <div class="d-flex">
-              <span>{{ seller.name }}</span>
-              <span class="ml-5">{{
+              <span class="text-emphasis">{{ seller.name }}</span>
+              <span class="ml-5 text-emphasis">{{
                 sales.filter((sale) => sale.seller == seller.name).length
               }}</span>
             </div>
@@ -76,3 +76,9 @@ const fetchSales = async (seller) => {
     </v-card-text>
   </v-card>
 </template>
+<style scoped>
+.text-emphasis {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+</style>
