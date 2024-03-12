@@ -125,7 +125,7 @@ onMounted(async () => {
       <v-col>
         <v-card
           class="mx-auto"
-          color="primary"
+          color="orange-darken-4"
           variant="tonal"
           prepend-icon="mdi-feather"
         >
@@ -134,8 +134,8 @@ onMounted(async () => {
           </template>
 
           <v-card-text
-            class="text-h4 my-6 font-italic font-weight-light"
-            style="line-height: 35px"
+            class="text-h3 my-6 font-italic font-weight-light"
+            style="line-height: 45px"
           >
             {{ `"${currentMetric.phrase}"` }}
           </v-card-text>
