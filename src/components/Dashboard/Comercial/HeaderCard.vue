@@ -57,9 +57,13 @@ const submitMetric = async () => {
     />
   </Dialog>
   <v-card>
-    <v-card-title class="d-flex flex-column flex-md-row align-center ga-2">
-      <span>METAS {{ metric.description }}</span>
-      <v-spacer></v-spacer>
+    <v-card-title
+      class="d-flex flex-column justify-center text-wrap align-center ga-3 text-orange-darken-4"
+    >
+      <span class="text-h4 font-weight-bold"
+        >METAS {{ metric.description }}</span
+      >
+      <!-- <v-spacer></v-spacer> -->
       <div>
         <v-btn
           icon="mdi-chart-line"
