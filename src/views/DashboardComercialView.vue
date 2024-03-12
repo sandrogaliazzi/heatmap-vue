@@ -121,5 +121,39 @@ onMounted(async () => {
         />
       </v-col>
     </v-row>
+    <v-row>
+      <v-col>
+        <v-card
+          class="mx-auto"
+          color="primary"
+          variant="tonal"
+          prepend-icon="mdi-feather"
+        >
+          <template v-slot:prepend>
+            <v-icon size="x-large">mdi-feather</v-icon>
+          </template>
+
+          <v-card-text
+            class="text-h4 my-6 font-italic font-weight-light"
+            style="line-height: 35px"
+          >
+            {{ `"${currentMetric.phrase}"` }}
+          </v-card-text>
+          <v-card-actions>
+            <v-list-item class="w-100">
+              <template v-slot:append>
+                <div class="justify-self-end">
+                  <v-icon class="me-1" icon="mdi-heart"></v-icon>
+                  <span class="subheading me-2">256</span>
+                  <span class="me-1">·</span>
+                  <v-icon class="me-1" icon="mdi-share-variant"></v-icon>
+                  <span class="subheading">45</span>
+                </div>
+              </template>
+            </v-list-item>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>

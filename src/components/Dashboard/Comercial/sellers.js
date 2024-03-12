@@ -38,5 +38,10 @@ export default {
       avatar: "../src/assets/SELLERS/JESSICA.jpg",
       sellerClass: 1,
     },
+    {
+      name: "EQUIPE CONECT",
+      avatar: "../src/assets/SELLERS/CONECTNET.png",
+      sellerClass: 1,
+    },
   ],
 };

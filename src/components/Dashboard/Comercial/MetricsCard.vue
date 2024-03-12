@@ -15,6 +15,13 @@ const { title, metric, numberOfSales } = defineProps([
           <p>{{ numberOfSales }}/{{ metric }}</p>
         </div>
       </v-card-title>
+      <v-card-text
+        class="d-flex justify-end"
+        style="font-size: 1rem"
+        v-if="numberOfSales > 0"
+      >
+        Faltam {{ metric - numberOfSales }}
+      </v-card-text>
     </v-card>
   </v-col>
 </template>

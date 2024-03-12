@@ -34,6 +34,7 @@ const submitMetric = async () => {
         monthSales: newMetric.value.monthSales,
         weekSales: newMetric.value.weekSales,
         dailySales: newMetric.value.dailySales,
+        phrase: newMetric.value.phrase,
         date: new Date().toLocaleDateString(),
       });
     }
@@ -129,6 +130,13 @@ const submitMetric = async () => {
               label="Dia"
               v-model="newMetric.dailySales"
             ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-textarea
+              clearable
+              label="Frase"
+              v-model="newMetric.phrase"
+            ></v-textarea>
           </v-col>
         </v-row>
         <v-checkbox label="Nova métrica" v-model="createNewMetric"></v-checkbox>

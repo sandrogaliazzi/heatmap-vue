@@ -56,10 +56,13 @@ const sellersName = ref([
   "NADINE",
   "JANICE",
   "JESSICA",
+  "EQUIPE CONECT",
 ]);
 
 const findClass = (name) => {
-  return ["JESSICA", "NADINE", "JANICE"].indexOf(name) > -1 ? 0 : 1;
+  return ["JESSICA", "NADINE", "JANICE", "EQUIPE CONECT"].indexOf(name) > -1
+    ? 0
+    : 1;
 };
 
 watch(seller, (name) => {

@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import fetchApi from "@/api";
 const { data, seller } = defineProps(["data", "seller"]);
+const emit = defineEmits(["delete-sale"]);
 
 const sales = ref(null);
 
@@ -10,6 +11,7 @@ const headers = ref([
   { key: "client", title: "Cliente" },
   { key: "ticket", title: "Plano" },
   { key: "date", title: "Data" },
+  { title: "Deletar", key: "actions", sortable: false },
 ]);
 
 const fetchAllSales = async () => {
@@ -20,6 +22,24 @@ const fetchAllSales = async () => {
     }
   } catch (error) {
     console.error(error);
+  }
+};
+
+const deleteItem = async (item) => {
+  if (confirm("Deseja excluir está venda?")) {
+    try {
+      const response = await fetchApi.delete(`/salesdelete/${item._id}`);
+
+      if (response.status === 200) {
+        alert("Venda deletada com sucesso");
+        emit("delete-sale", item.seller);
+      } else {
+        alert("ocorreu um erro, tente novamente");
+      }
+    } catch (error) {
+      console.error("Erro ao excluir a venda:", error);
+      alert("Ocorreu um erro ao excluir a venda, tente novamente");
+    }
   }
 };
 
@@ -50,7 +70,11 @@ const search = ref("");
           :headers="headers"
           :items="sales ? sales : data"
           :search="search"
-        ></v-data-table>
+        >
+          <template v-slot:item.actions="{ item }">
+            <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
+          </template>
+        </v-data-table>
       </v-card>
     </v-card-text>
   </v-card>

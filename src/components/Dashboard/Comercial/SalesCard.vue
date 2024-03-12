@@ -33,7 +33,11 @@ const fetchSales = async (seller) => {
           @click="fetchSales(seller.name)"
         >
           <v-dialog activator="parent" width="auto">
-            <SalesData :data="salesBySeller" :seller="seller" />
+            <SalesData
+              :data="salesBySeller"
+              :seller="seller"
+              @delete-sale="(seller) => fetchSales(seller)"
+            />
           </v-dialog>
           <v-list-item-title>
             <div class="d-flex">
@@ -53,7 +57,11 @@ const fetchSales = async (seller) => {
           @click="fetchSales(seller.name)"
         >
           <v-dialog activator="parent" width="auto">
-            <SalesData :data="salesBySeller" :seller="seller" />
+            <SalesData
+              :data="salesBySeller"
+              :seller="seller"
+              @delete-sale="(seller) => fetchSales(seller)"
+            />
           </v-dialog>
           <v-list-item-title>
             <div class="d-flex">
