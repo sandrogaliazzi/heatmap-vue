@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import fetchApi from "@/api";
+import { months } from "moment-timezone";
 const { data, seller } = defineProps(["data", "seller"]);
 const emit = defineEmits(["delete-sale"]);
 
@@ -10,8 +11,20 @@ const headers = ref([
   { key: "seller", title: "Vendedor" },
   { key: "client", title: "Cliente" },
   { key: "ticket", title: "Plano" },
-  { key: "date", title: "Data" },
-  { title: "Deletar", key: "actions", sortable: false },
+  { key: "city", title: "Cidade" },
+  {
+    key: "date",
+    title: "Data",
+    value: (item) => {
+      const [year, month, day] = item.date.split("-");
+      return `${day}/${month}/${year}`;
+    },
+  },
+  {
+    title: "Deletar",
+    key: "actions",
+    sortable: false,
+  },
 ]);
 
 const fetchAllSales = async () => {

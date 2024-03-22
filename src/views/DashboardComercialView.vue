@@ -4,10 +4,13 @@ import moment from "moment-timezone";
 import SalesCard from "@/components/Dashboard/Comercial/SalesCard";
 import HeaderCard from "@/components/Dashboard/Comercial/HeaderCard.vue";
 import MetricsCard from "@/components/Dashboard/Comercial/MetricsCard";
+import BarCharts from "@/components/Dashboard/Comercial/BarCharts.vue";
 import fetchApi from "@/api";
 
 const metrics = ref([]);
 const currentMetric = ref({});
+const loading = ref(true);
+const viewNumber = ref(1);
 
 const sales = ref([]);
 const nextKey = ref(0);
@@ -63,7 +66,6 @@ const fetchData = async () => {
 const refreshSales = () => {
   setInterval(() => {
     fetchSales();
-    console.log("atualizado");
   }, 15000);
 };
 
@@ -71,6 +73,7 @@ refreshSales();
 
 onMounted(async () => {
   await fetchData();
+  loading.value = false;
 });
 </script>
 
@@ -84,13 +87,14 @@ onMounted(async () => {
           @update-metric="(metric) => updateMetric(metric)"
           @update-component="() => fetchGoals()"
           @update-sale="() => fetchSales()"
+          @update-view-number="(number) => (viewNumber = number)"
           :metrics="metrics"
           :metric="currentMetric"
           :key="nextKey"
         />
       </v-col>
     </v-row>
-    <v-row justify="center">
+    <v-row justify="center" v-if="!loading">
       <MetricsCard
         title="VENDAS MENSAIS"
         :metric="currentMetric.monthSales"
@@ -108,17 +112,41 @@ onMounted(async () => {
       />
     </v-row>
     <v-row v-if="sales.sales">
-      <v-col cols="12" md="4">
-        <SalesCard title="Vendas Mês" :sales="sales.sales" />
-      </v-col>
-      <v-col cols="12" md="4">
-        <SalesCard title="Vendas Semana" :sales="sales.weekSales" />
-      </v-col>
-      <v-col cols="12" md="4">
-        <SalesCard
-          :title="'Vendas ' + new Date().toLocaleDateString()"
-          :sales="sales.dailySales"
-        />
+      <v-col>
+        <v-window v-model="viewNumber">
+          <v-window-item :value="1">
+            <v-row>
+              <v-col cols="12" md="4">
+                <SalesCard
+                  title="Vendas Mês"
+                  :sales="sales.sales"
+                  filter="month"
+                />
+              </v-col>
+              <v-col cols="12" md="4">
+                <SalesCard
+                  title="Vendas Semana"
+                  :sales="sales.weekSales"
+                  filter="week"
+                />
+              </v-col>
+              <v-col cols="12" md="4">
+                <SalesCard
+                  :title="'Vendas ' + new Date().toLocaleDateString()"
+                  :sales="sales.dailySales"
+                  filter="day"
+                />
+              </v-col>
+            </v-row>
+          </v-window-item>
+          <v-window-item :value="2">
+            <v-row>
+              <v-col>
+                <BarCharts />
+              </v-col>
+            </v-row>
+          </v-window-item>
+        </v-window>
       </v-col>
     </v-row>
     <v-row>

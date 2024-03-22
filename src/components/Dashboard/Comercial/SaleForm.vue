@@ -33,6 +33,7 @@ const planos = ref(planosJSON);
 const sellerClass = ref(null);
 const clientName = ref("");
 const date = ref(formatDate(new Date()));
+const city = ref("");
 const weekNumber = ref(getCurrentWeekNumber());
 const ticket = ref("");
 const formRef = ref(null);
@@ -92,6 +93,7 @@ const handleSubmit = async () => {
       sellerClass: sellerClass.value,
       client: clientName.value.toUpperCase(),
       ticket: ticket.value,
+      city: city.value,
       metricId,
     };
 
@@ -158,7 +160,6 @@ const handleSubmit = async () => {
           type="text"
           label="Cliente"
         ></v-text-field>
-
         <v-row>
           <v-col>
             <v-autocomplete
@@ -168,9 +169,26 @@ const handleSubmit = async () => {
               v-model="ticket"
             ></v-autocomplete>
           </v-col>
+        </v-row>
+        <v-row>
           <v-col>
             <v-text-field type="date" label="data" v-model="date">
             </v-text-field>
+          </v-col>
+          <v-col>
+            <v-select
+              label="Cidade"
+              :items="[
+                'NOVA HARTZ',
+                'IGREJINHA',
+                'ARARICA',
+                'TAQUARA',
+                'GRAVATAI',
+                'PAROBÉ',
+              ]"
+              :rules="inputRules"
+              v-model="city"
+            ></v-select>
           </v-col>
         </v-row>
 

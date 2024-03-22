@@ -1,16 +1,24 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import fetchApi from "@/api";
 import Dialog from "@/components/Dialog/Dialog.vue";
 import SaleForm from "./SaleForm.vue";
 
 const { metrics, metric } = defineProps(["metrics", "metric"]);
-const emit = defineEmits(["update-metric", "update-component", "update-sale"]);
+const emit = defineEmits([
+  "update-metric",
+  "update-component",
+  "update-sale",
+  "update-view-number",
+]);
 
 const openForm = ref(false);
 const openDialog = ref(false);
 const newMetric = ref({ ...metric });
 const createNewMetric = ref(false);
+const viewSettings = ref(false);
+const viewNumber = ref(1);
+const play = ref(true);
 
 const resetState = () => {
   newMetric.value = { ...newMetric };
@@ -18,9 +26,37 @@ const resetState = () => {
   createNewMetric.value = false;
 };
 
+let interval;
+
+const playView = () => {
+  if (play.value) {
+    interval = setInterval(() => {
+      emit("update-view-number", viewNumber.value++);
+    }, 15000);
+  }
+};
+
+watch(play, (isPlaying) => {
+  if (isPlaying) {
+    playView();
+  } else {
+    clearInterval(interval);
+  }
+});
+
+watch(viewNumber, (currentNumber) => {
+  if (currentNumber > 2) viewNumber.value = 1;
+  if (currentNumber < 1) viewNumber.value = 2;
+  emit("update-view-number", viewNumber.value);
+});
+
 watch(createNewMetric, (newVal) => {
   if (newVal) newMetric.value = {};
   else newMetric.value = { ...metric };
+});
+
+onMounted(() => {
+  playView();
 });
 
 const submitMetric = async () => {
@@ -56,15 +92,15 @@ const submitMetric = async () => {
       @update-sales="() => emit('update-sale')"
     />
   </Dialog>
-  <v-card>
+  <v-card class="py-3 rounded-xl">
     <v-card-title
       class="d-flex flex-column justify-center text-wrap align-center ga-3 text-orange-darken-4"
     >
-      <span class="text-h4 font-weight-bold"
+      <span class="text-h4 font-weight-light text-capitalize"
         >METAS {{ metric.description }}</span
       >
       <!-- <v-spacer></v-spacer> -->
-      <div>
+      <div class="d-flex ga-6 mb-3">
         <v-btn
           icon="mdi-chart-line"
           color="orange"
@@ -74,11 +110,19 @@ const submitMetric = async () => {
         <v-btn
           icon="mdi-menu"
           color="primary"
-          class="ml-2"
           variant="tonal"
           id="menu-activator"
         >
         </v-btn>
+
+        <v-btn
+          icon="mdi-eye-settings"
+          color="indigo"
+          variant="tonal"
+          @click="viewSettings = !viewSettings"
+        >
+        </v-btn>
+
         <v-menu activator="#menu-activator">
           <v-list>
             <v-list-item
@@ -94,9 +138,28 @@ const submitMetric = async () => {
         <v-btn
           icon="mdi-plus"
           color="green"
-          class="ml-2"
           variant="tonal"
           @click="openDialog = true"
+        ></v-btn>
+      </div>
+      <div class="d-flex" v-if="viewSettings">
+        <v-btn
+          icon="mdi-rewind"
+          variant="text"
+          color="white"
+          @click="viewNumber--"
+        ></v-btn>
+        <v-btn
+          :icon="play ? 'mdi-pause' : 'mdi-play'"
+          variant="text"
+          color="white"
+          @click="play = !play"
+        ></v-btn>
+        <v-btn
+          icon="mdi-fast-forward"
+          variant="text"
+          color="white"
+          @click="viewNumber++"
         ></v-btn>
       </div>
     </v-card-title>
@@ -139,6 +202,7 @@ const submitMetric = async () => {
             <v-textarea
               clearable
               label="Frase"
+              variant="solo"
               v-model="newMetric.phrase"
             ></v-textarea>
           </v-col>

@@ -3,16 +3,54 @@ import { ref } from "vue";
 import sellers from "./sellers";
 import fetchApi from "@/api";
 import SalesData from "./SalesData.vue";
+import moment from "moment-timezone";
 
-const { title, sales } = defineProps(["title", "sales"]);
+const { title, sales, filter } = defineProps(["title", "sales", "filter"]);
 
 const salesBySeller = ref([]);
+
+function getWeekNumber(date) {
+  // Configurando o fuso horário para Brasília
+  moment.tz.setDefault("America/Sao_Paulo");
+
+  // Obtendo a data atual no fuso horário de Brasília
+  const momentDate = date ? moment(date) : moment();
+
+  // Obtendo o número da semana atual
+  const weekNumber = momentDate.isoWeek();
+
+  console.log(weekNumber);
+
+  return weekNumber;
+}
+
+const formatDate = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 const fetchSales = async (seller) => {
   try {
     const response = await fetchApi(`sales/${seller}`);
     if (response.status === 200) {
-      salesBySeller.value = response.data;
+      switch (filter) {
+        case "month":
+          salesBySeller.value = response.data;
+          break;
+        case "week":
+          salesBySeller.value = response.data.filter(
+            (sale) => sale.weekNumber == getWeekNumber()
+          );
+          break;
+
+        case "day":
+          salesBySeller.value = response.data.filter(
+            (sale) => sale.date === formatDate()
+          );
+          break;
+      }
     }
   } catch (error) {
     console.error(error);
@@ -21,7 +59,7 @@ const fetchSales = async (seller) => {
 </script>
 
 <template>
-  <v-card :title="title">
+  <v-card :title="title" class="rounded-xl">
     <v-card-text>
       <v-list density="compact" lines="one">
         <v-list-item type="subheader" title="Externo"></v-list-item>
