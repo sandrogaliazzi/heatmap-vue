@@ -29,7 +29,7 @@ const isActive = ref(false);
 const data = ref(null);
 
 const options = ref({
-  indexAxis: "y",
+  indexAxis: "x",
   plugins: {
     title: {
       display: true,
@@ -58,6 +58,7 @@ const citys = ref([
   "TAQUARA",
   "GRAVATAI",
   "PAROBÉ",
+  "GLORINHA",
 ]);
 
 const sellers = ref([

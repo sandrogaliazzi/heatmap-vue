@@ -152,6 +152,7 @@ onMounted(async () => {
     <v-row>
       <v-col>
         <v-card
+          v-if="viewNumber === 1"
           class="mx-auto"
           color="orange-darken-4"
           variant="tonal"
