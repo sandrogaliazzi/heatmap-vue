@@ -1,11 +1,14 @@
 <script setup>
 import { ref } from "vue";
 import fetchApi from "@/api";
-import { months } from "moment-timezone";
+import EditSaleForm from "@/components/Dashboard/Comercial/EditSaleForm";
+
 const { data, seller } = defineProps(["data", "seller"]);
 const emit = defineEmits(["delete-sale"]);
 
+const dialog = ref(false);
 const sales = ref(null);
+const sale = ref(null);
 
 const headers = ref([
   { key: "seller", title: "Vendedor" },
@@ -56,9 +59,22 @@ const deleteItem = async (item) => {
   }
 };
 
+const editItem = (item) => {
+  dialog.value = true;
+  sale.value = item;
+};
+
 const search = ref("");
 </script>
 <template>
+  <v-dialog v-model="dialog">
+    <v-card class="py-5 px-5 mx-auto" min-width="750">
+      <EditSaleForm :sale="sale" @close-form="dialog = false"></EditSaleForm>
+      <template v-slot:actions>
+        <v-btn class="ms-auto" text="Cancelar" @click="dialog = false"></v-btn>
+      </template>
+    </v-card>
+  </v-dialog>
   <v-card>
     <v-card-text>
       <v-card flat>
@@ -86,6 +102,7 @@ const search = ref("");
         >
           <template v-slot:item.actions="{ item }">
             <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
+            <v-icon size="small" @click="editItem(item)"> mdi-pencil </v-icon>
           </template>
         </v-data-table>
       </v-card>

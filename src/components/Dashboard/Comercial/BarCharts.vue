@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import fetchApi from "@/api";
 import { Bar } from "vue-chartjs";
 import {
@@ -25,7 +25,7 @@ const { sales } = defineProps(["sales"]);
 
 const salesByCity = ref([]);
 const loadingChart = ref(false);
-const isActive = ref(false);
+const hasFilter = ref(true);
 const data = ref(null);
 
 const options = ref({
@@ -83,6 +83,13 @@ const colors = {
   "EQUIPE CONECT": "#00296b",
 };
 
+const byCurrentMonth = (sale) => {
+  const month = sale.date.split("-")[1];
+  const currentMonth = String(new Date().getMonth() + 1).padStart(2, "0");
+
+  return month === currentMonth;
+};
+
 const getSalesByCity = async () => {
   try {
     const sellersData = await Promise.all(
@@ -91,7 +98,9 @@ const getSalesByCity = async () => {
           citys.value.map(async (city) => {
             const response = await fetchApi(`/sales/${seller}/${city}`);
             if (response.status === 200) {
-              return response.data;
+              return hasFilter.value
+                ? response.data.filter(byCurrentMonth)
+                : response.data;
             } else {
               throw new Error(`Falha ao obter vendas de ${seller} em ${city}`);
             }
@@ -133,6 +142,8 @@ const renderChart = async () => {
   data.value = { labels, datasets };
 };
 
+watch(hasFilter, () => renderChart());
+
 onMounted(() => {
   renderChart();
 });
@@ -145,15 +156,15 @@ setInterval(() => {
   <v-card :loading="loadingChart">
     <v-card-title class="d-flex justify-space-between align-center">
       <p>Numero de Ativaçõs por cidade</p>
+      <!-- <div>
+        <v-switch
+          v-model="hasFilter"
+          label="Mês atual"
+          hide-details
+          color="orange-darken-4"
+        ></v-switch>
+      </div> -->
     </v-card-title>
-    <template v-slot:loader="{ isActive }">
-      <v-progress-linear
-        :active="isActive"
-        color="orange"
-        height="4"
-        indeterminate
-      ></v-progress-linear>
-    </template>
     <v-card-text>
       <Suspense>
         <Bar v-if="data" :data="data" :options="options" />
