@@ -18,6 +18,8 @@ const selectedOnu = ref(null);
 const authorizedOnu = ref(null);
 
 const oltIpList = oltIpRange.map((oltNumber) => `${baseOltIp}.${oltNumber}.2`);
+oltIpList.push("172.16.9.6");
+oltIpList.push("172.16.9.2");
 
 const getOltRamals = async () => {
   try {
