@@ -32,7 +32,7 @@ const planos = ref(planosJSON);
 const sellerClass = ref(findClass(sale.seller));
 const date = ref(sale.date);
 const city = ref(sale.city || "");
-const weekNumber = ref(getCurrentWeekNumber());
+const weekNumber = ref(getCurrentWeekNumber(sale.date));
 const formRef = ref(null);
 const cardLoader = ref(false);
 const ticket = ref(sale.ticket);
@@ -82,24 +82,26 @@ const handleSubmit = async () => {
       metricId: sale.metricId,
     };
 
-    try {
-      cardLoader.value = true;
-      const response = await fetchApi.post("/addSale", requestBody);
+    console.log(requestBody);
 
-      if (response.status == 200) {
-        notification.setNotification({
-          msg: "Venda cadastrada com sucesso",
-          status: "success",
-        });
-        emit("close-form");
-        console.log(response.data);
-      }
-    } catch (error) {
-      notification.setNotification({
-        msg: "Erro ao cadastrar venda",
-        status: "error",
-      });
-    }
+    // try {
+    //   cardLoader.value = true;
+    //   const response = await fetchApi.post("/addSale", requestBody);
+
+    //   if (response.status == 200) {
+    //     notification.setNotification({
+    //       msg: "Venda cadastrada com sucesso",
+    //       status: "success",
+    //     });
+    //     emit("close-form");
+    //     console.log(response.data);
+    //   }
+    // } catch (error) {
+    //   notification.setNotification({
+    //     msg: "Erro ao cadastrar venda",
+    //     status: "error",
+    //   });
+    // }
   }
 };
 </script>
