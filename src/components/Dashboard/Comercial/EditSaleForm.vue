@@ -82,26 +82,24 @@ const handleSubmit = async () => {
       metricId: sale.metricId,
     };
 
-    console.log(requestBody);
+    try {
+      cardLoader.value = true;
+      const response = await fetchApi.post("/addSale", requestBody);
 
-    // try {
-    //   cardLoader.value = true;
-    //   const response = await fetchApi.post("/addSale", requestBody);
-
-    //   if (response.status == 200) {
-    //     notification.setNotification({
-    //       msg: "Venda cadastrada com sucesso",
-    //       status: "success",
-    //     });
-    //     emit("close-form");
-    //     console.log(response.data);
-    //   }
-    // } catch (error) {
-    //   notification.setNotification({
-    //     msg: "Erro ao cadastrar venda",
-    //     status: "error",
-    //   });
-    // }
+      if (response.status == 200) {
+        notification.setNotification({
+          msg: "Venda cadastrada com sucesso",
+          status: "success",
+        });
+        emit("close-form");
+        console.log(response.data);
+      }
+    } catch (error) {
+      notification.setNotification({
+        msg: "Erro ao cadastrar venda",
+        status: "error",
+      });
+    }
   }
 };
 </script>
