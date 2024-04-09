@@ -20,6 +20,7 @@ const {
   getSelectedCtoPosition,
   selectedUserLocation,
   getSelectedUserPosition,
+  isEventMarkerVisible,
 } = storeToRefs(store);
 const { getCto, getTomodatData } = store;
 
@@ -27,8 +28,8 @@ const heatmapStore = useHeatMapStore();
 const { isHeatMapVisible } = storeToRefs(heatmapStore);
 
 const mapRef = ref(null);
-const mapZoom = ref(15);
-const heatMapRadius = ref(50);
+const mapZoom = ref(11);
+const heatMapRadius = ref(5);
 const cto = ref({});
 const openModal = ref(false);
 
@@ -147,7 +148,7 @@ onMounted(() => loadEvents());
     </GMapMarker>
 
     <EventMarker
-      v-if="events.length"
+      v-if="events.length && isEventMarkerVisible"
       :event-markers="events"
       @update-event="(event) => onUpdateEvent(event)"
     />

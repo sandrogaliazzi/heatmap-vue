@@ -9,7 +9,7 @@ import { ref, watch } from "vue";
 import SideNavList from "./SideNavList";
 
 const isSearchBarVisible = ref(false);
-const isCtoMarkerVisible = ref(true);
+const isCtoMarkerVisible = ref(false);
 const drawer = ref(false);
 
 const heatmapStore = useHeatMapStore();
@@ -86,6 +86,16 @@ const handleUserLocation = () => {
     </v-btn>
     <v-btn icon @click="toggleCtoMarkers">
       <v-icon>{{ isCtoMarkerVisible ? "mdi-cube" : "mdi-cube-off" }}</v-icon>
+    </v-btn>
+    <v-btn
+      icon
+      @click="
+        tomodatStore.isEventMarkerVisible = !tomodatStore.isEventMarkerVisible
+      "
+    >
+      <v-icon>{{
+        tomodatStore.isEventMarkerVisible ? "mdi-alert" : "mdi-alert-outline"
+      }}</v-icon>
     </v-btn>
     <v-btn
       icon="mdi-map-marker-account"

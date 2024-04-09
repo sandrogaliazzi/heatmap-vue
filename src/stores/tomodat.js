@@ -5,10 +5,11 @@ import fetchApi from "@/api/index.js";
 export const useTomodatStore = defineStore("tomodat", () => {
   const ctoList = ref([]);
   const ctoListByCity = ref({});
-  const queryCto = ref("");
+  const queryCto = ref("123456");
   const locatedClients = ref([]);
   const selectedCto = ref("");
   const selectedUserLocation = ref(null);
+  const isEventMarkerVisible = ref(true);
 
   async function getTomodatData() {
     const response = await fetchApi.get("/fetch");
@@ -96,7 +97,7 @@ export const useTomodatStore = defineStore("tomodat", () => {
   }
 
   const getSelectedCtoPosition = computed(() => {
-    const position = { lat: -29.58576358380055, lng: -50.8956005852099 };
+    const position = { lat: -29.67523007459448, lng: -50.87956603814547 };
 
     if (selectedCto.value) {
       selectedUserLocation.value = null;
@@ -169,5 +170,6 @@ export const useTomodatStore = defineStore("tomodat", () => {
     getAllLocatedClients,
     selectedUserLocation,
     getSelectedUserPosition,
+    isEventMarkerVisible,
   };
 });

@@ -7,8 +7,15 @@ import ctoFullIcon from "@/assets/ctofull.png";
 
 const tomodatStore = useTomodatStore();
 
-const isMarkerVisible = (marker) =>
-  marker.title.includes(tomodatStore.queryCto.toUpperCase()) ? true : false;
+const isMarkerVisible = (marker) => {
+  const multiples = tomodatStore.queryCto.toUpperCase().split(",");
+
+  if (multiples.length > 1) {
+    return multiples.some((query) => marker.title.includes(query));
+  } else {
+    return marker.title.includes(tomodatStore.queryCto.toUpperCase());
+  }
+};
 
 const props = defineProps({
   markers: Array, //Lista de Marcadores
