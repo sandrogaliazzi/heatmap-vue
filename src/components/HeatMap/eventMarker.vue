@@ -29,12 +29,12 @@ import redWarningIcon from "@/assets/red-warning-icon.png";
       <br />
 
       <p class="mb-8">
-        {{
-          event.status === "RESOLVIDO"
-            ? `${event.closeDescription}`
-            : `${event.openDescription}`
-        }}
-
+        {{ event.openDescription }}
+        <br />
+        <br />
+        <b>Encerramento</b>
+        <br />
+        {{ event.closeDescription || "" }}
         <br />
         <br />
 
@@ -95,7 +95,7 @@ import redWarningIcon from "@/assets/red-warning-icon.png";
   <GMapMarker
     v-for="marker in eventMarkers"
     :key="marker._id"
-    :animation="2"
+    :animation="marker.status === 'RESOLVIDO' ? 2 : 1"
     :title="marker.title"
     :position="marker.eventLocale"
     :icon="marker.status === 'RESOLVIDO' ? warningIcon : redWarningIcon"
