@@ -247,6 +247,7 @@ const onClientPositionSelected = async ({ client, position }) => {
           <AddClientForm
             :clientPosition="positionClicked"
             :cto="cto"
+            :splitter="getSplitterPortStatus"
             @slide-back="slideNumber--"
           />
         </v-card-text>

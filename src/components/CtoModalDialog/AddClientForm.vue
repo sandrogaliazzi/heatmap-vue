@@ -10,7 +10,7 @@ const notification = useNotificationStore();
 const tomodat = useTomodatStore();
 const userStore = useUserStore();
 
-const props = defineProps(["clientPosition", "cto"]);
+const props = defineProps(["clientPosition", "cto", "splitter"]);
 const emit = defineEmits(["slideBack"]);
 
 const { clientPosition, cto } = toRefs(props);
@@ -146,11 +146,13 @@ const handleFormSubmit = async () => {
           <v-btn
             type="submit"
             block
-            :disabled="loading"
+            :disabled="loading || props.splitter.status?.isFull"
             :loading="loading"
             append-icon="mdi-plus-circle"
-            color="success"
-            >Adiconar</v-btn
+            :color="props.splitter.status?.isFull ? 'error' : 'success'"
+            >{{
+              props.splitter.status?.isFull ? "CTO lotada" : "Adicionar"
+            }}</v-btn
           >
         </v-col>
       </v-row>
