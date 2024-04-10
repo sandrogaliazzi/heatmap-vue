@@ -16,6 +16,7 @@ const unauthorizedOnuList = ref([]);
 const windowNumer = ref(1);
 const selectedOnu = ref(null);
 const authorizedOnu = ref(null);
+const findMac = ref("");
 
 const oltIpList = oltIpRange.map((oltNumber) => `${baseOltIp}.${oltNumber}.2`);
 oltIpList.push("172.16.9.6");
@@ -72,6 +73,12 @@ const hasUnauthorizedOnu = computed(() => {
   return unauthorizedOnuList.value.length;
 });
 
+const unAuthOnuFilterByMAC = computed(() => {
+  return unauthorizedOnuList.value.filter((onu) => {
+    return onu.onuMac.includes(findMac.value.toLowerCase());
+  });
+});
+
 const fetchAll = async () => {
   oltRamals.value = await getOltRamals();
   unauthorizedOnuList.value = await mergeOnuAndRamalData();
@@ -122,9 +129,14 @@ const closeDialog = inject("closeDialog");
     <v-card-text>
       <v-window v-model="windowNumer">
         <v-window-item :value="1">
+          <v-text-field
+            type="search"
+            label="Pesquisar MAC"
+            v-model="findMac"
+          ></v-text-field>
           <OnuList
             v-if="hasUnauthorizedOnu"
-            :onuList="unauthorizedOnuList"
+            :onuList="unAuthOnuFilterByMAC || unauthorizedOnuList"
             @update:window-number="resgisterOnu"
           />
           <v-container v-else>
