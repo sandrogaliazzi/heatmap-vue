@@ -21,7 +21,15 @@ const props = defineProps({
   markers: Array, //Lista de Marcadores
 });
 
-const emit = defineEmits(["open:ctoDialog"]);
+const emit = defineEmits(["open:ctoDialog", "open:sideBar"]);
+
+const handleMarkerClick = (event, marker) => {
+  if (!event.domEvent.altKey) {
+    emit("open:ctoDialog", marker.id);
+  } else {
+    emit("open:sideBar", marker);
+  }
+};
 </script>
 
 <template>
@@ -32,7 +40,7 @@ const emit = defineEmits(["open:ctoDialog"]);
     :position="marker.position"
     :icon="marker.percentage_free == 0 ? ctoFullIcon : ctoIcon"
     :clickable="true"
-    @click="$emit('open:ctoDialog', marker.id)"
+    @click="handleMarkerClick($event, marker)"
     :visible="isMarkerVisible(marker)"
   />
 </template>

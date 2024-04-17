@@ -18,7 +18,8 @@ const userStore = useUserStore();
 
 const router = useRouter();
 
-const { selectedCto, selectedUserLocation } = storeToRefs(tomodatStore);
+const { selectedCto, selectedUserLocation, setPolygonDrawMode } =
+  storeToRefs(tomodatStore);
 
 const logout = () => {
   userStore.logout();
@@ -83,6 +84,11 @@ const handleUserLocation = () => {
     </v-btn>
     <v-btn icon @click="onAppBarIconClick">
       <v-icon :color="isHeatMapVisible ? 'orange' : ''">mdi-fire-circle</v-icon>
+    </v-btn>
+    <v-btn icon @click="setPolygonDrawMode = !setPolygonDrawMode">
+      <v-icon :color="setPolygonDrawMode ? 'success' : ''"
+        >mdi-map-marker-path</v-icon
+      >
     </v-btn>
     <v-btn icon @click="toggleCtoMarkers">
       <v-icon>{{ isCtoMarkerVisible ? "mdi-cube" : "mdi-cube-off" }}</v-icon>

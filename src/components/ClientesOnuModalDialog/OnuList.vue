@@ -99,7 +99,7 @@ const checkAllSignal = async (onuList) => {
         variant="tonal"
         :loading="isLoadingSignal"
         @click="checkAllSignal(onuList)"
-        v-else-if="isNaN(signalCalc.tx) && onuList.length <= 16"
+        v-else-if="isNaN(signalCalc.tx) && onuList.length <= 500"
         >Calcular sinal
       </v-btn>
     </v-list-subheader>

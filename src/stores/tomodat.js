@@ -10,6 +10,7 @@ export const useTomodatStore = defineStore("tomodat", () => {
   const selectedCto = ref("");
   const selectedUserLocation = ref(null);
   const isEventMarkerVisible = ref(true);
+  const setPolygonDrawMode = ref(false);
 
   async function getTomodatData() {
     const response = await fetchApi.get("/fetch");
@@ -171,5 +172,6 @@ export const useTomodatStore = defineStore("tomodat", () => {
     selectedUserLocation,
     getSelectedUserPosition,
     isEventMarkerVisible,
+    setPolygonDrawMode,
   };
 });
