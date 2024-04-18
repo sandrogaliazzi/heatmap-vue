@@ -146,13 +146,11 @@ const handleFormSubmit = async () => {
           <v-btn
             type="submit"
             block
-            :disabled="loading || props.splitter.status?.isFull"
+            :disabled="loading"
             :loading="loading"
             append-icon="mdi-plus-circle"
-            :color="props.splitter.status?.isFull ? 'error' : 'success'"
-            >{{
-              props.splitter.status?.isFull ? "CTO lotada" : "Adicionar"
-            }}</v-btn
+            color="success"
+            >Adicionar</v-btn
           >
         </v-col>
       </v-row>

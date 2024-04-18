@@ -1,7 +1,7 @@
 const USER_TOKEN = "1d5239793dc902884e533885ee42f917";
 const PASSWORD = "3206faa077c375";
 
-const MK_GET_TOKEN = `http://177.73.28.19:8080/mk/WSAutenticacao.rule?sys=MK0&token=${USER_TOKEN}&password=${PASSWORD}&cd_servico=9999`;
+const MK_GET_TOKEN = `https://mk.conectnet.net/mk/WSAutenticacao.rule?sys=MK0&token=${USER_TOKEN}&password=${PASSWORD}&cd_servico=9999`;
 
 const MK_CLIENT_FONE = `https://mk.conectnet.net/core-api/pessoas/nome?nome=&token=`;
 

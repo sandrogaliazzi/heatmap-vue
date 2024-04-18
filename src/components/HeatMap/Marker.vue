@@ -27,7 +27,7 @@ const handleMarkerClick = (event, marker) => {
   if (!event.domEvent.altKey) {
     emit("open:ctoDialog", marker.id);
   } else {
-    emit("open:sideBar", marker);
+    emit("open:sideBar", [marker]);
   }
 };
 </script>

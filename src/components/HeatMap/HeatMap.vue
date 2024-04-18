@@ -63,6 +63,11 @@ const showSideBar = async (ctoList) => {
   //console.log(cto);
 };
 
+const closeSideBar = () => {
+  sideBar.value= false;
+  sideBarCtoList.value = [];
+}
+
 const onCloseDialog = (value) => {
   openModal.value = value;
   openEventModal.value = value;
@@ -105,6 +110,7 @@ watch(setPolygonDrawMode, (mode) => {
   if (!mode) {
     areaCoordinates.value = [];
     sideBar.value = false;
+    sideBarCtoList.value = [];
   }
 });
 
@@ -248,7 +254,9 @@ const onReloadEvent = () => {
 //   return transformedCoordinates;
 // }
 
-onMounted(() => loadEvents());
+onMounted(() => {
+  loadEvents();
+});
 </script>
 
 <template>
@@ -279,20 +287,11 @@ onMounted(() => loadEvents());
   >
     <v-card variant="flat">
       <v-card-title
-        class="mt-3 d-flex wrap"
+        class="mt-3 d-flex flex-column ga-2"
         v-if="sideBarCtoList.length > 0"
         style="position: sticky; top: 0"
       >
-        <v-chip prepend-icon="mdi-cube" size="large" color="primary">{{
-          sideBarCtoList.length
-        }}</v-chip>
-        <v-chip
-          prepend-icon="mdi-account"
-          size="large"
-          color="orange"
-          class="ml-2"
-          >{{ findTotalClients() }}</v-chip
-        >
+       <div class="d-flex justify-center">
         <v-btn
           rounded="xl"
           class="ml-2"
@@ -309,6 +308,27 @@ onMounted(() => loadEvents());
           @click="openClientSignalModal = true"
           >Sinal</v-btn
         >
+        <v-btn
+          rounded="xl"
+          class="ml-2"
+          color="error"
+          prepend-icon="mdi-close"
+          @click="closeSideBar"
+          >Sair</v-btn
+        >
+       </div>
+       <div class="d-flex justify-center">
+        <v-chip prepend-icon="mdi-cube" size="large" color="primary">CTO {{
+          sideBarCtoList.length
+        }}</v-chip>
+        <v-chip
+          prepend-icon="mdi-account"
+          size="large"
+          color="orange"
+          class="ml-2"
+          >CLIENTES {{ findTotalClients() }}</v-chip
+        >
+       </div>
       </v-card-title>
       <v-card-text style="max-height: 80vh; overflow-y: auto">
         <v-list>
