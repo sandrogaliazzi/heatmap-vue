@@ -5,7 +5,7 @@ import fetchApi from "@/api";
 import SalesData from "./SalesData.vue";
 import moment from "moment-timezone";
 
-const { title, sales, filter } = defineProps(["title", "sales", "filter"]);
+const { title, sales, filter, metric } = defineProps(["title", "sales", "filter", "metric"]);
 
 const salesBySeller = ref([]);
 
@@ -37,7 +37,12 @@ const fetchSales = async (seller) => {
     if (response.status === 200) {
       switch (filter) {
         case "month":
-          salesBySeller.value = response.data;
+        console.log(metric._id);
+          salesBySeller.value = response.data.filter(
+            (sale) => {
+              return sale.metricId == metric._id;
+            }
+          );
           break;
         case "week":
           salesBySeller.value = response.data.filter(

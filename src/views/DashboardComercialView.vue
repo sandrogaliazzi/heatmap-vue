@@ -119,8 +119,10 @@ onMounted(async () => {
               <v-col cols="12" md="4">
                 <SalesCard
                   title="Vendas Mês"
+                  :metric="currentMetric"
                   :sales="sales.sales"
                   filter="month"
+                  :key="nextKey"
                 />
               </v-col>
               <v-col cols="12" md="4">
