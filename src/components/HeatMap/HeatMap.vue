@@ -64,9 +64,9 @@ const showSideBar = async (ctoList) => {
 };
 
 const closeSideBar = () => {
-  sideBar.value= false;
+  sideBar.value = false;
   sideBarCtoList.value = [];
-}
+};
 
 const onCloseDialog = (value) => {
   openModal.value = value;
@@ -291,44 +291,44 @@ onMounted(() => {
         v-if="sideBarCtoList.length > 0"
         style="position: sticky; top: 0"
       >
-       <div class="d-flex justify-center">
-        <v-btn
-          rounded="xl"
-          class="ml-2"
-          color="success"
-          prepend-icon="mdi-phone"
-          @click="getClientsFone"
-          >IF-BOT</v-btn
-        >
-        <v-btn
-          rounded="xl"
-          class="ml-2"
-          color="indigo"
-          prepend-icon="mdi-flash"
-          @click="openClientSignalModal = true"
-          >Sinal</v-btn
-        >
-        <v-btn
-          rounded="xl"
-          class="ml-2"
-          color="error"
-          prepend-icon="mdi-close"
-          @click="closeSideBar"
-          >Sair</v-btn
-        >
-       </div>
-       <div class="d-flex justify-center">
-        <v-chip prepend-icon="mdi-cube" size="large" color="primary">CTO {{
-          sideBarCtoList.length
-        }}</v-chip>
-        <v-chip
-          prepend-icon="mdi-account"
-          size="large"
-          color="orange"
-          class="ml-2"
-          >CLIENTES {{ findTotalClients() }}</v-chip
-        >
-       </div>
+        <div class="d-flex justify-center">
+          <v-btn
+            rounded="xl"
+            class="ml-2"
+            color="success"
+            prepend-icon="mdi-phone"
+            @click="getClientsFone"
+            >IF-BOT</v-btn
+          >
+          <v-btn
+            rounded="xl"
+            class="ml-2"
+            color="indigo"
+            prepend-icon="mdi-flash"
+            @click="openClientSignalModal = true"
+            >Sinal</v-btn
+          >
+          <v-btn
+            rounded="xl"
+            class="ml-2"
+            color="error"
+            prepend-icon="mdi-close"
+            @click="closeSideBar"
+            >Sair</v-btn
+          >
+        </div>
+        <div class="d-flex justify-center">
+          <v-chip prepend-icon="mdi-cube" size="large" color="primary"
+            >CTO {{ sideBarCtoList.length }}</v-chip
+          >
+          <v-chip
+            prepend-icon="mdi-account"
+            size="large"
+            color="orange"
+            class="ml-2"
+            >CLIENTES {{ findTotalClients() }}</v-chip
+          >
+        </div>
       </v-card-title>
       <v-card-text style="max-height: 80vh; overflow-y: auto">
         <v-list>

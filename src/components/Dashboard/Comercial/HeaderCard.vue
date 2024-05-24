@@ -45,8 +45,8 @@ watch(play, (isPlaying) => {
 });
 
 watch(viewNumber, (currentNumber) => {
-  if (currentNumber > 2) viewNumber.value = 1;
-  if (currentNumber < 1) viewNumber.value = 2;
+  if (currentNumber > 3) viewNumber.value = 1;
+  if (currentNumber < 1) viewNumber.value = 3;
   emit("update-view-number", viewNumber.value);
 });
 
@@ -92,11 +92,12 @@ const submitMetric = async () => {
       @update-sales="() => emit('update-sale')"
     />
   </Dialog>
-  <v-card class="py-3 rounded-xl">
+  <v-card class="py-3 rounded-t-xl">
     <v-card-title
       class="d-flex flex-column justify-center text-wrap align-center ga-3 text-orange-darken-4"
     >
-      <span class="text-h4 font-weight-light text-capitalize"
+      <span
+        class="text-h4 text-center px-4 mb-4 font-weight-light text-capitalize"
         >METAS {{ metric.description }}</span
       >
       <!-- <v-spacer></v-spacer> -->

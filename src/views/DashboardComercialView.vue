@@ -5,6 +5,7 @@ import SalesCard from "@/components/Dashboard/Comercial/SalesCard";
 import HeaderCard from "@/components/Dashboard/Comercial/HeaderCard.vue";
 import MetricsCard from "@/components/Dashboard/Comercial/MetricsCard";
 import BarCharts from "@/components/Dashboard/Comercial/BarCharts.vue";
+import MessageBoard from "@/components/Dashboard/Comercial/MessageBoard.vue";
 import fetchApi from "@/api";
 
 const metrics = ref([]);
@@ -14,6 +15,7 @@ const viewNumber = ref(1);
 
 const sales = ref([]);
 const nextKey = ref(0);
+const nextKeyMessage = ref(0);
 
 function getWeekNumber(date) {
   // Configurando o fuso horário para Brasília
@@ -94,7 +96,7 @@ onMounted(async () => {
         />
       </v-col>
     </v-row>
-    <v-row justify="center" v-if="!loading">
+    <v-row justify="center" v-if="!loading && viewNumber !== 3">
       <MetricsCard
         title="VENDAS MENSAIS"
         :metric="currentMetric.monthSales"
@@ -119,8 +121,10 @@ onMounted(async () => {
               <v-col cols="12" md="4">
                 <SalesCard
                   title="Vendas Mês"
+                  :metric="currentMetric"
                   :sales="sales.sales"
                   filter="month"
+                  :key="nextKey"
                 />
               </v-col>
               <v-col cols="12" md="4">
@@ -144,6 +148,14 @@ onMounted(async () => {
               <v-col>
                 <BarCharts />
               </v-col>
+            </v-row>
+          </v-window-item>
+          <v-window-item :value="3">
+            <v-row>
+              <MessageBoard
+                @re-render="nextKeyMessage++"
+                :key="nextKeyMessage"
+              />
             </v-row>
           </v-window-item>
         </v-window>
