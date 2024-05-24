@@ -213,6 +213,17 @@ onUnmounted(() => emit("closeMarker"));
         <template v-if="eventAction === 'close'">
           <v-row>
             <v-col>
+              <v-text-field
+            type="text"
+            label="Título do evento"
+            v-model="title"
+            :rules="inputRules"
+          >
+              </v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
               <v-textarea
                 clearable
                 label="Encerramento"
