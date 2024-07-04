@@ -85,11 +85,35 @@ const fetchSales = async (seller) => {
             />
           </v-dialog>
           <v-list-item-title>
-            <div class="d-flex">
+            <div class="d-flex ga-2 align-center">
               <span class="text-emphasis">{{ seller.name }}</span>
-              <span class="ml-5 text-emphasis">{{
+              <span class="ml-3 text-emphasis">{{
                 sales.filter((sale) => sale.seller == seller.name).length
               }}</span>
+              <v-progress-linear
+                v-if="filter === 'month' && seller.goal"
+                :location="false"
+                bg-color="#92aed9"
+                color="primary"
+                height="12"
+                :max="seller.goal"
+                min="0"
+                :model-value="
+                  sales.filter((sale) => sale.seller == seller.name).length
+                "
+                rounded
+              >
+              </v-progress-linear>
+              <div
+                v-if="filter === 'month' && seller.goal"
+                class="d-flex flex-column align-center"
+              >
+                <span class="text-emphasis">{{
+                  seller.goal -
+                  sales.filter((sale) => sale.seller == seller.name).length
+                }}</span>
+                <span class="text-small">Faltam</span>
+              </div>
             </div>
           </v-list-item-title>
         </v-list-item>
@@ -109,11 +133,34 @@ const fetchSales = async (seller) => {
             />
           </v-dialog>
           <v-list-item-title>
-            <div class="d-flex">
+            <div class="d-flex ga-2 align-center">
               <span class="text-emphasis">{{ seller.name }}</span>
-              <span class="ml-5 text-emphasis">{{
+              <span class="ml-3 text-emphasis">{{
                 sales.filter((sale) => sale.seller == seller.name).length
               }}</span>
+              <v-progress-linear
+                v-if="filter === 'month' && seller.goal"
+                :location="false"
+                bg-color="#92aed9"
+                color="primary"
+                height="12"
+                :max="seller.goal"
+                min="0"
+                :model-value="
+                  sales.filter((sale) => sale.seller == seller.name).length
+                "
+                rounded
+              ></v-progress-linear>
+              <div
+                v-if="filter === 'month' && seller.goal"
+                class="d-flex flex-column align-center"
+              >
+                <span class="text-emphasis">{{
+                  seller.goal -
+                  sales.filter((sale) => sale.seller == seller.name).length
+                }}</span>
+                <span class="text-small">Faltam</span>
+              </div>
             </div>
           </v-list-item-title>
         </v-list-item>
@@ -124,6 +171,11 @@ const fetchSales = async (seller) => {
 <style scoped>
 .text-emphasis {
   font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.text-small {
+  font-size: 0.7rem;
   font-weight: bold;
 }
 </style>
