@@ -9,14 +9,14 @@ import fetchApi from "@/api";
 
 const { cto } = defineProps(["cto"]);
 
-const ctoNotes = ref([]);
+const ctoNotes = ref(false);
 
 onMounted(async () => {
   const response = await fetchApi("connections/"+cto.id)
 
   const notes = response.data.map(d => d.connection_slot_notes).filter(note => note.length > 0);
 
-  notes.length > 0 ? ctoNotes.value = notes.flat().map(n => n.note) : ctoNotes.value = false;
+  if(notes.length > 0) ctoNotes.value = notes.flat().map(n => ({id: n.id, note:n.note}));
 })
 
 const closeDialog = inject("closeDialog");
@@ -248,7 +248,6 @@ const onClientPositionSelected = async ({ client, position }) => {
           <CtoClientsList
             :clients="cto.clients"
             :notes="ctoNotes"
-            class="mb-4"
             @adduser:location="(client) => createMarker(client)"
           />
         </v-card-text>

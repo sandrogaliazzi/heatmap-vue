@@ -1,9 +1,9 @@
 <script setup>
-import { defineProps, toRefs, ref } from "vue";
+import { ref } from "vue";
 import fetchApi from "@/api";
 
-const props = defineProps(["client"]);
-const { client } = toRefs(props);
+const { client } = defineProps(["client"]);
+
 
 const isColorActive = ref(false);
 const setSnackBar = ref(false);
