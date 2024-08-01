@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, inject } from "vue";
+import { ref, computed, watch, inject, onMounted } from "vue";
 
 import CtoMap from "./CtoMap.vue";
 import CtoClientsList from "./CtoClientsList.vue";
@@ -8,6 +8,16 @@ import ClientesOnuCard from "../ClientesOnuModalDialog/ClientesOnuCard.vue";
 import fetchApi from "@/api";
 
 const { cto } = defineProps(["cto"]);
+
+const ctoNotes = ref([]);
+
+onMounted(async () => {
+  const response = await fetchApi("connections/"+cto.id)
+
+  const notes = response.data.map(d => d.connection_slot_notes).filter(note => note.length > 0);
+
+  notes.length > 0 ? ctoNotes.value = notes.flat().map(n => n.note) : ctoNotes.value = false;
+})
 
 const closeDialog = inject("closeDialog");
 
@@ -237,6 +247,7 @@ const onClientPositionSelected = async ({ client, position }) => {
         <v-card-text class="pa-5">
           <CtoClientsList
             :clients="cto.clients"
+            :notes="ctoNotes"
             class="mb-4"
             @adduser:location="(client) => createMarker(client)"
           />
