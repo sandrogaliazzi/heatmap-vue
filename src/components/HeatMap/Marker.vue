@@ -4,6 +4,7 @@ import { useTomodatStore } from "@/stores/tomodat";
 
 import ctoIcon from "@/assets/ctoconect.png";
 import ctoFullIcon from "@/assets/ctofull.png";
+import ceIcon from "@/assets/ce.png";
 
 const tomodatStore = useTomodatStore();
 
@@ -21,9 +22,21 @@ const props = defineProps({
   markers: Array, //Lista de Marcadores
 });
 
-const emit = defineEmits(["open:ctoDialog", "open:sideBar"]);
+const isICon = (ap) => {
+  if (ap.category == 4) return ceIcon;
+  else {
+    if (ap.percentage_free == 0) return ctoFullIcon;
+    else return ctoIcon;
+  }
+};
+
+const emit = defineEmits(["open:ctoDialog", "open:sideBar", "open:ceDialog"]);
 
 const handleMarkerClick = (event, marker) => {
+  if (marker.category == 4) {
+    emit("open:ctoDialog", marker.id);
+    return;
+  }
   if (!event.domEvent.altKey) {
     emit("open:ctoDialog", marker.id);
   } else {
@@ -38,7 +51,7 @@ const handleMarkerClick = (event, marker) => {
     :key="index"
     :title="marker.title"
     :position="marker.position"
-    :icon="marker.percentage_free == 0 ? ctoFullIcon : ctoIcon"
+    :icon="isICon(marker)"
     :clickable="true"
     @click="handleMarkerClick($event, marker)"
     :visible="isMarkerVisible(marker)"

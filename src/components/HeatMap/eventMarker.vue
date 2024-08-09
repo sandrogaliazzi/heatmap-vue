@@ -5,7 +5,7 @@ import Dialog from "../Dialog/Dialog.vue";
 const openDialog = ref(false);
 const event = ref({});
 
-const { eventMarkers } = defineProps(["eventMarkers"]);
+const { eventMarkers, visible } = defineProps(["eventMarkers", "visible"]);
 const emit = defineEmits(["updateEvent"]);
 
 const setWindowInfo = (info) => {
@@ -101,6 +101,7 @@ import redWarningIcon from "@/assets/red-warning-icon.png";
     :icon="marker.status === 'RESOLVIDO' ? warningIcon : redWarningIcon"
     :clickable="true"
     @click="setWindowInfo(marker)"
+    :visible="visible || marker.status !== 'RESOLVIDO'"
   >
   </GMapMarker>
 </template>

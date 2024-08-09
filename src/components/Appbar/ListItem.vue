@@ -1,5 +1,5 @@
 <script setup>
-import { inject, watch } from "vue";
+import { inject } from "vue";
 import { useTomodatStore } from "@/stores/tomodat";
 
 const closeDialog = inject("closeDialog");
@@ -9,6 +9,7 @@ const tomodatStore = useTomodatStore();
 const setCto = ({ ctoId, ctoName, id, name }) => {
   tomodatStore.selectedCto = ctoId || id;
   tomodatStore.queryCto = ctoName || name;
+  tomodatStore.mapZoom = 16;
   closeDialog();
 };
 

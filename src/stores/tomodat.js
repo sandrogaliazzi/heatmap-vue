@@ -1,32 +1,26 @@
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { defineStore } from "pinia";
 import fetchApi from "@/api/index.js";
 
 export const useTomodatStore = defineStore("tomodat", () => {
   const ctoList = ref([]);
+  const ceList = ref([]);
   const ctoListByCity = ref({});
   const queryCto = ref("123456");
   const locatedClients = ref([]);
   const selectedCto = ref("");
+  const loadingData = ref(true);
+  const mapZoom = ref(11);
   const selectedUserLocation = ref(null);
-  const isEventMarkerVisible = ref(true);
+  const isEventMarkerVisible = ref(false);
   const setPolygonDrawMode = ref(false);
 
   async function getTomodatData() {
-    const response = await fetchApi.get("/fetch");
+    const response = await fetchApi.get("/newfetch");
+
+    loadingData.value = false;
 
     ctoList.value = response.data;
-
-    ctoListByCity.value = divideByCity(ctoList.value);
-  }
-
-  function divideByCity(ctoList) {
-    return ctoList.reduce((acc, item) => {
-      if (!acc[item.city]) acc[item.city] = [item];
-      else acc[item.city].push(item);
-
-      return acc;
-    }, {});
   }
 
   async function getAllLocatedClients() {
@@ -133,6 +127,7 @@ export const useTomodatStore = defineStore("tomodat", () => {
         percentage_free: cto.percentage_free,
         title: cto.name,
         id: cto.id,
+        category: cto.category,
       };
     });
   });
@@ -173,5 +168,7 @@ export const useTomodatStore = defineStore("tomodat", () => {
     getSelectedUserPosition,
     isEventMarkerVisible,
     setPolygonDrawMode,
+    loadingData,
+    mapZoom,
   };
 });

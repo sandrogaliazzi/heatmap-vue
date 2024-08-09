@@ -11,13 +11,36 @@ const { cto } = defineProps(["cto"]);
 
 const ctoNotes = ref(false);
 
+const fiberColor = {
+  1: "verde",
+  2: "amarela",
+  3: "branca",
+  4: "azul",
+  5: "vermelha",
+  6: "violeta",
+  7: "marrom",
+  8: "rosa",
+  9: "preta",
+  10: "cinza",
+  11: "laranja",
+  12: "acqua",
+};
+
 onMounted(async () => {
-  const response = await fetchApi("connections/"+cto.id)
+  const response = await fetchApi("connections/" + cto.id);
 
-  const notes = response.data.map(d => d.connection_slot_notes).filter(note => note.length > 0);
+  const notes = response.data
+    .map((d) => d.connection_slot_notes)
+    .filter((note) => note.length > 0);
 
-  if(notes.length > 0) ctoNotes.value = notes.flat().map(n => ({id: n.id, note:n.note}));
-})
+  if (notes.length > 0)
+    ctoNotes.value = notes.flat().map((n) => ({
+      id: n.id,
+      note: n.note,
+      color: fiberColor[n.slot_number]?.toUpperCase(),
+      slot: n.slot_number,
+    }));
+});
 
 const closeDialog = inject("closeDialog");
 

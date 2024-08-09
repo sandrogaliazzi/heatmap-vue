@@ -7,6 +7,7 @@ import { useRouter } from "vue-router";
 import { ref, watch } from "vue";
 
 import SideNavList from "./SideNavList";
+import ButtonGroup from "./ButtonGroup";
 
 const isSearchBarVisible = ref(false);
 const isCtoMarkerVisible = ref(false);
@@ -85,24 +86,6 @@ const handleUserLocation = () => {
     <v-btn icon @click="onAppBarIconClick">
       <v-icon :color="isHeatMapVisible ? 'orange' : ''">mdi-fire-circle</v-icon>
     </v-btn>
-    <v-btn icon @click="setPolygonDrawMode = !setPolygonDrawMode">
-      <v-icon :color="setPolygonDrawMode ? 'success' : ''"
-        >mdi-map-marker-path</v-icon
-      >
-    </v-btn>
-    <v-btn icon @click="toggleCtoMarkers">
-      <v-icon>{{ isCtoMarkerVisible ? "mdi-cube" : "mdi-cube-off" }}</v-icon>
-    </v-btn>
-    <v-btn
-      icon
-      @click="
-        tomodatStore.isEventMarkerVisible = !tomodatStore.isEventMarkerVisible
-      "
-    >
-      <v-icon>{{
-        tomodatStore.isEventMarkerVisible ? "mdi-alert" : "mdi-alert-outline"
-      }}</v-icon>
-    </v-btn>
     <v-btn
       icon="mdi-map-marker-account"
       variant="text"
@@ -114,6 +97,17 @@ const handleUserLocation = () => {
 
   <!-- DRAWER -->
   <v-navigation-drawer v-model="drawer" temporary>
+    <ButtonGroup
+      :isCtoMarkerVisible="isCtoMarkerVisible"
+      :setPolygonDrawMode="setPolygonDrawMode"
+      @toggleMarkers="toggleCtoMarkers"
+      @toggleDrawMode="() => (setPolygonDrawMode = !setPolygonDrawMode)"
+    />
     <SideNavList @logout:user="logout" :user="userStore.user" />
   </v-navigation-drawer>
+  <v-progress-linear
+    v-if="tomodatStore.loadingData"
+    color="primary"
+    indeterminate
+  ></v-progress-linear>
 </template>

@@ -29,7 +29,9 @@ watch(query, () => {
       query.value.split(" ").length > 1 ||
       query.value.split("-").length > 1
     ) {
-      const typeOfSearch = /^R\d+(?:-[\w\d]+)?$/.test(query.value.toUpperCase())
+      const typeOfSearch = /^(R\d+-CA\d+|CE-\d+|CD-\d+)$/.test(
+        query.value.toUpperCase()
+      )
         ? "cto"
         : "client";
 

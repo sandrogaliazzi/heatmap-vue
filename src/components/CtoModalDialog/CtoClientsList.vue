@@ -86,9 +86,11 @@ const copyNameWithHifen = async (name) => {
   <v-list density="compact" nav v-if="notes">
     <v-list-subheader>ANOTAÇÕES</v-list-subheader>
     <v-list-item
-      v-for="note in notes" :key="note.id"
+      v-for="note in notes"
+      :key="note.id"
       :value="note.note"
       :title="note.note"
+      :subtitle="`SPLITTER ${note.slot} ou VIA ${note.color}`"
       prepend-icon="mdi-text"
     ></v-list-item>
   </v-list>
