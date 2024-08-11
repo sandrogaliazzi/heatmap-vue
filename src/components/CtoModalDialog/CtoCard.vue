@@ -6,10 +6,13 @@ import CtoClientsList from "./CtoClientsList.vue";
 import AddClientForm from "./AddClientForm.vue";
 import ClientesOnuCard from "../ClientesOnuModalDialog/ClientesOnuCard.vue";
 import fetchApi from "@/api";
+import CeCard from "@/components/CeModalDialog/CeCard.vue";
 
-const { cto } = defineProps(["cto"]);
+const { cto, tomodatView } = defineProps(["cto", "tomodatView"]);
+const emit = defineEmits(["setCtoFromChild"]);
 
 const ctoNotes = ref(false);
+const apConnList = ref([]);
 
 const fiberColor = {
   1: "verde",
@@ -26,8 +29,14 @@ const fiberColor = {
   12: "acqua",
 };
 
+const slideNumber = ref(1);
+
 onMounted(async () => {
   const response = await fetchApi("connections/" + cto.id);
+
+  apConnList.value = response.data;
+
+  console.log(apConnList.value);
 
   const notes = response.data
     .map((d) => d.connection_slot_notes)
@@ -44,8 +53,7 @@ onMounted(async () => {
 
 const closeDialog = inject("closeDialog");
 
-const isMapVisible = ref(true);
-const slideNumber = ref(1);
+const isMapVisible = ref(false);
 const positionClicked = ref({ lat: "", lng: "" });
 const userLocation = ref(null);
 const showOnuCard = ref(false);
@@ -197,6 +205,11 @@ const onClientRemoved = async (id) => {
   }
 };
 
+const setViewMode = () => {
+  if (slideNumber.value === 1) slideNumber.value = 3;
+  else slideNumber.value = 1;
+};
+
 const onClientPositionSelected = async ({ client, position }) => {
   if (!(await clientLocationExists(client.name))) {
     const locationSaved = await saveClientLocation(client, position);
@@ -223,6 +236,7 @@ const onClientPositionSelected = async ({ client, position }) => {
           variant="text"
           @click="handleUserLocation"
         />
+        <v-btn icon="mdi-connection" variant="text" @click="setViewMode" />
         <v-btn
           v-if="slideNumber < 2"
           icon="mdi-account-plus"
@@ -295,6 +309,12 @@ const onClientPositionSelected = async ({ client, position }) => {
             >Voltar</v-btn
           >
         </v-card-actions>
+      </v-window-item>
+      <v-window-item :value="3" v-if="apConnList.length > 0">
+        <CeCard
+          :ce="apConnList"
+          @new-cto-selected="(ctoData) => emit('setCtoFromChild', ctoData)"
+        ></CeCard>
       </v-window-item>
     </v-window>
     <v-card-actions>

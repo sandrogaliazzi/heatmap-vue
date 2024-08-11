@@ -4,7 +4,7 @@ import fetchApi from "@/api/index.js";
 
 export const useTomodatStore = defineStore("tomodat", () => {
   const ctoList = ref([]);
-  const ceList = ref([]);
+  const cableList = ref([]);
   const ctoListByCity = ref({});
   const queryCto = ref("123456");
   const locatedClients = ref([]);
@@ -16,11 +16,19 @@ export const useTomodatStore = defineStore("tomodat", () => {
   const setPolygonDrawMode = ref(false);
 
   async function getTomodatData() {
-    const response = await fetchApi.get("/newfetch");
+    try {
+      const [cableResponse, ctoResponse] = await Promise.all([
+        fetchApi.get("/cables"),
+        fetchApi.get("/newfetch"),
+      ]);
 
-    loadingData.value = false;
+      loadingData.value = false;
 
-    ctoList.value = response.data;
+      cableList.value = cableResponse.data;
+      ctoList.value = ctoResponse.data;
+    } catch (error) {
+      console.error("Error fetching Tomodat data:", error);
+    }
   }
 
   async function getAllLocatedClients() {
@@ -64,7 +72,7 @@ export const useTomodatStore = defineStore("tomodat", () => {
   });
 
   function getCto(id) {
-    const cto = ctoList.value.find((cto) => cto.id === id);
+    const cto = ctoList.value.find((cto) => cto.id == id);
 
     const locatedClients = getLocatedClientesByCto(id);
 
@@ -152,6 +160,7 @@ export const useTomodatStore = defineStore("tomodat", () => {
 
   return {
     ctoList,
+    cableList,
     ctoListByCity,
     getTomodatData,
     getMarkersData,

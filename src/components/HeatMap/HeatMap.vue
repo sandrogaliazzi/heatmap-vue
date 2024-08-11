@@ -13,6 +13,7 @@ import DialogBox from "@/components/Dialog/Dialog.vue";
 import Marker from "./Marker.vue";
 import EventMarker from "./eventMarker.vue";
 import RightSideBar from "./RightSidebar.vue";
+import Cables from "./Cables.vue";
 
 const store = useTomodatStore();
 const {
@@ -24,6 +25,7 @@ const {
   isEventMarkerVisible,
   setPolygonDrawMode,
   mapZoom,
+  cableList,
 } = storeToRefs(store);
 const { getCto, getTomodatData } = store;
 
@@ -69,9 +71,17 @@ const onCloseDialog = (value) => {
   openClientSignalModal.value = value;
 };
 
+const ctoKey = ref(1);
+
 const getCtoById = (id) => {
   cto.value = getCto(id);
   openModal.value = true;
+};
+
+const changeCto = (newCtoData) => {
+  const ctoData = JSON.parse(newCtoData);
+  cto.value = getCto(ctoData.id);
+  ctoKey.value++;
 };
 
 const getCeById = async (id) => {
@@ -169,7 +179,11 @@ onMounted(() => {
 
 <template>
   <DialogBox :isOpen="openModal" @update:modalValue="onCloseDialog">
-    <CtoCard :cto="cto" />
+    <CtoCard
+      :cto="cto"
+      @set-cto-from-child="(cto) => changeCto(cto)"
+      :key="ctoKey"
+    />
   </DialogBox>
 
   <DialogBox :isOpen="openEventModal" @update:modalValue="onCloseDialog">
@@ -230,6 +244,8 @@ onMounted(() => {
       @open:side-bar="(cto) => showSideBar(cto)"
       @open:ce-dialog="(id) => getCeById(id)"
     />
+
+    <Cables v-if="cableList.length > 0" :cables="cableList" />
 
     <GMapPolygon
       ref="polygonRef"
