@@ -91,7 +91,7 @@ const fetchSales = async (seller) => {
                 sales.filter((sale) => sale.seller == seller.name).length
               }}</span>
               <v-progress-linear
-                v-if="filter === 'month' && seller.goal"
+                v-if="filter === 'month' && seller.goal && seller.name != 'MARONES'"
                 :location="false"
                 bg-color="#92aed9"
                 color="primary"
@@ -105,7 +105,7 @@ const fetchSales = async (seller) => {
               >
               </v-progress-linear>
               <div
-                v-if="filter === 'month' && seller.goal"
+                v-if="filter === 'month' && seller.goal && seller.name != 'MARONES'"
                 class="d-flex flex-column align-center"
               >
                 <span class="text-emphasis">{{

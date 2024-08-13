@@ -18,13 +18,7 @@ export default {
       avatar: "../src/assets/SELLERS/LUIS FELIPE.jpg",
       sellerClass: 0,
       goal: 22,
-    },
-    {
-      name: "JEFERSON",
-      avatar: "../src/assets/SELLERS/JEFERSON.jpg",
-      sellerClass: 0,
-      goal: 22,
-    },
+    }
   ],
   internos: [
     {
