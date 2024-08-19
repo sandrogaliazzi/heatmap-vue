@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useNotificationStore } from "@/stores/notification";
+// import fetchApi from "@/api/index.js";
 
 const { clients, notes } = defineProps(["clients", "notes"]);
 const emit = defineEmits(["adduser:location"]);
@@ -31,6 +32,18 @@ const copyNameWithHifen = async (name) => {
   await navigator.clipboard.writeText(nameWithHifen);
   triggerNotification("Nome copiado!");
 };
+
+// const deleteClient = async (id) => {
+//   if (confirm("deseja excluir este cliente?")) {
+//     try {
+//       const response = await fetchApi.delete(`deleteclientfromtomodat/${id}`);
+
+//       console.log(response.data);
+//     } catch (error) {
+//       console.error("erro ao adicionar cliente " + error.message);
+//     }
+//   }
+// };
 </script>
 
 <template>
@@ -80,6 +93,14 @@ const copyNameWithHifen = async (name) => {
           class="d-none d-md-flex"
           @click="copyNameWithHifen(client.name)"
         ></v-btn>
+        <!-- <v-btn
+          color="grey-lighten-1"
+          icon="mdi-delete"
+          variant="text"
+          size="small"
+          class="d-none d-md-flex"
+          @click="deleteClient(client.id)"
+        ></v-btn> -->
       </template>
     </v-list-item>
   </v-list>

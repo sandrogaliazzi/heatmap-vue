@@ -18,7 +18,13 @@ export default {
       avatar: "../src/assets/SELLERS/LUIS FELIPE.jpg",
       sellerClass: 0,
       goal: 22,
-    }
+    },
+    {
+      name: "YAN",
+      avatar: "../src/assets/avatar.png",
+      sellerClass: 0,
+      goal: 0,
+    },
   ],
   internos: [
     {

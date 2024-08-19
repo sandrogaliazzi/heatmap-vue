@@ -53,6 +53,7 @@ const sellersName = ref([
   "FELIPE",
   "LUIS FELIPE",
   "MARONES",
+  "YAN",
   "NADINE",
   "JANICE",
   "JESSICA",
