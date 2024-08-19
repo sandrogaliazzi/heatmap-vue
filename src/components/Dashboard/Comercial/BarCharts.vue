@@ -60,7 +60,7 @@ const citys = ref([
   "PAROBÉ",
   "GLORINHA",
   "NOVO HAMBURGO",
-  "SAPIRANGA"
+  "SAPIRANGA",
 ]);
 
 const sellers = ref([
@@ -68,6 +68,7 @@ const sellers = ref([
   "LUIS FELIPE",
   "JEFERSON",
   "MARONES",
+  "YAN",
   "NADINE",
   "JANICE",
   "JESSICA",
@@ -82,6 +83,7 @@ const colors = {
   NADINE: "#ff006e",
   JANICE: "#FF9800",
   JESSICA: "#ccff33",
+  YAN: "#03ffa2",
   "EQUIPE CONECT": "#00296b",
 };
 

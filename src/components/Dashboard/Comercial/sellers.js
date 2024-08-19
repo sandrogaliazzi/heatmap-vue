@@ -21,7 +21,7 @@ export default {
     },
     {
       name: "YAN",
-      avatar: "../src/assets/avatar.png",
+      avatar: "../src/assets/SELLERS/yan.jpg",
       sellerClass: 0,
       goal: 0,
     },
