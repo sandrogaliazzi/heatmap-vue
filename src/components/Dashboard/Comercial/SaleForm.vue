@@ -188,6 +188,7 @@ const handleSubmit = async () => {
                 'GLORINHA',
                 'NOVO HAMBURGO',
                 'SAPIRANGA',
+                'TRÊS COROAS'
               ]"
               :rules="inputRules"
               v-model="city"

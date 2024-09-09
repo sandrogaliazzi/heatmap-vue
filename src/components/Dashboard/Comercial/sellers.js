@@ -1,13 +1,6 @@
 export default {
   externos: [
     {
-      name: "MARONES",
-      avatar: "../src/assets/SELLERS/MARONES.jpg",
-      sellerClass: 1,
-      goal: 22,
-    },
-
-    {
       name: "FELIPE",
       avatar: "../src/assets/SELLERS/FELIPE.jpg",
       sellerClass: 0,
@@ -23,7 +16,7 @@ export default {
       name: "YAN",
       avatar: "../src/assets/SELLERS/yan.jpg",
       sellerClass: 0,
-      goal: 0,
+      goal: 22,
     },
   ],
   internos: [
@@ -43,7 +36,7 @@ export default {
       name: "JESSICA",
       avatar: "../src/assets/SELLERS/JESSICA.jpg",
       sellerClass: 1,
-      goal: 0,
+      goal: 5,
     },
     {
       name: "EQUIPE CONECT",

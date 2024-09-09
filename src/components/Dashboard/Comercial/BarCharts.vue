@@ -61,6 +61,7 @@ const citys = ref([
   "GLORINHA",
   "NOVO HAMBURGO",
   "SAPIRANGA",
+  "TRÊS COROAS"
 ]);
 
 const sellers = ref([

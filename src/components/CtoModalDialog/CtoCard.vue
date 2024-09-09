@@ -101,7 +101,12 @@ const handleSplliterStatus = computed(() => {
 });
 
 const openNewGMapTab = (position) => {
-  const url = `https://www.google.com/maps/search/?api=1&query=${position.lat},${position.lng}`;
+  let url = "";
+  if(confirm("deseja abrir este link no waze?")) {
+    url = `https://www.waze.com/ul?ll=${position.lat}%2C${position.lng}&navigate=yes&zoom=17`;
+  } else {
+    url = `https://www.google.com/maps/search/?api=1&query=${position.lat},${position.lng}`
+  }
   const win = window.open(url, "_blank");
   win.focus();
 };
