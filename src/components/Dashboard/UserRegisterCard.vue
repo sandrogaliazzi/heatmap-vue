@@ -44,18 +44,19 @@ const saveUser = async (reqBody) => {
 };
 
 const editUser = async (reqBody) => {
-  try {
-    await fetchApi.put(`users/${user._id}`, reqBody);
-    notification.setNotification({
-      msg: "Usuário editado com sucesso",
-      status: "success",
-    });
-  } catch (e) {
-    notification.setNotification({
-      msg: "Erro ao editar usuário",
-      status: "red",
-    });
-  }
+  console.log(reqBody)
+  // try {
+  //   await fetchApi.put(`users/${user._id}`, reqBody);
+  //   notification.setNotification({
+  //     msg: "Usuário editado com sucesso",
+  //     status: "success",
+  //   });
+  // } catch (e) {
+  //   notification.setNotification({
+  //     msg: "Erro ao editar usuário",
+  //     status: "red",
+  //   });
+  // }
 };
 
 const handleSubmit = async () => {
@@ -99,7 +100,7 @@ const handleSubmit = async () => {
       <v-container>
         <v-row>
           <v-col cols="12">
-            <v-form ref="formRef" @submit.prevent="handleSubmit">
+            <v-form ref="formRef" @submit.prevent="handleSubmit" autocomplete="off">
               <v-col cols="12">
                 <v-text-field
                   prepend-icon="mdi-account"

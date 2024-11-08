@@ -15,21 +15,35 @@ export const useTomodatStore = defineStore("tomodat", () => {
   const isEventMarkerVisible = ref(false);
   const setPolygonDrawMode = ref(false);
 
+  // async function getTomodatData() {
+  //   try {
+  //     const [cableResponse, ctoResponse] = await Promise.all([
+  //       fetchApi.get("/cables"),
+  //       fetchApi.get("/newfetch"),
+  //     ]);
+
+  //     loadingData.value = false;
+
+  //     cableList.value = cableResponse.data;
+  //     ctoList.value = ctoResponse.data;
+  //   } catch (error) {
+  //     console.error("Error fetching Tomodat data:", error);
+  //   }
+  // }
+
   async function getTomodatData() {
     try {
-      const [cableResponse, ctoResponse] = await Promise.all([
-        fetchApi.get("/cables"),
-        fetchApi.get("/newfetch"),
-      ]);
+        const ctoResponse = await fetchApi.get("/newfetch");
+        ctoList.value = ctoResponse.data;
 
-      loadingData.value = false;
+        const cableResponse = await fetchApi.get("/cables");
+        cableList.value = cableResponse.data;
 
-      cableList.value = cableResponse.data;
-      ctoList.value = ctoResponse.data;
+        loadingData.value = false;
     } catch (error) {
-      console.error("Error fetching Tomodat data:", error);
+        console.error("Error fetching Tomodat data:", error);
     }
-  }
+}
 
   async function getAllLocatedClients() {
     const response = await fetchApi.get("ctoclient");

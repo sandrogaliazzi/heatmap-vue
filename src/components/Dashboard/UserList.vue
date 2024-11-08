@@ -63,6 +63,8 @@ const userIcon = computed(() => {
 const editUser = (id) => {
   user.value = users.value.find((user) => user._id === id);
 
+  console.log(user.value);
+
   dialog.value = true;
 };
 
@@ -140,8 +142,6 @@ const deleteUser = async (id) => {
           >
             <v-list-item-subtitle class="mt-2">
               <p>{{ user.category }}</p>
-              <p>Número de logins: {{ loginData[user.name]?.loginCounter }}</p>
-              <p>Último acesso em: {{ loginData[user.name]?.lastDate }}</p>
             </v-list-item-subtitle>
             <template #append>
               <div class="d-none d-sm-flex">

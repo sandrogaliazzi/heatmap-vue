@@ -87,6 +87,7 @@ const selectRamal = async (ramal) => {
 
   ponSignals.value = calcSignal(gponData.value);
   cardId.value = ramal._id;
+  console.log(gponSignals);
   loading.value = false;
 };
 
@@ -159,12 +160,12 @@ onMounted(async () => {
                   <p>Não há clientes cadastrados neste ramal</p>
                 </v-card-text>
                 <v-card-text>
-                  <v-btn
+                 <!--<v-btn
                     color="primary"
                     variant="tonal"
                     @click="selectRamal(ramal)"
                     >Ver Sinais
-                  </v-btn>
+                  </v-btn> -->
                   <v-btn
                     v-if="ponSignals && cardId == ramal._id"
                     class="ml-2"

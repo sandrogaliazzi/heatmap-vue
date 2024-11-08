@@ -21,6 +21,7 @@ const findMac = ref("");
 const oltIpList = oltIpRange.map((oltNumber) => `${baseOltIp}.${oltNumber}.2`);
 oltIpList.push("172.16.9.6");
 oltIpList.push("172.16.9.10");
+oltIpList.push("172.16.11.2");
 
 const getOltRamals = async () => {
   try {
