@@ -1,9 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import { useNotificationStore } from "@/stores/notification";
-// import fetchApi from "@/api/index.js";
 
-const { clients, notes } = defineProps(["clients", "notes"]);
+const { clients, notes, ctoId } = defineProps(["clients"]);
 const emit = defineEmits(["adduser:location"]);
 const selected = ref([]);
 
@@ -103,16 +102,5 @@ const copyNameWithHifen = async (name) => {
         ></v-btn> -->
       </template>
     </v-list-item>
-  </v-list>
-  <v-list density="compact" nav v-if="notes">
-    <v-list-subheader>ANOTAÇÕES</v-list-subheader>
-    <v-list-item
-      v-for="note in notes"
-      :key="note.id"
-      :value="note.note"
-      :title="note.note"
-      :subtitle="`SPLITTER ${note.slot} ou VIA ${note.color}`"
-      prepend-icon="mdi-text"
-    ></v-list-item>
   </v-list>
 </template>

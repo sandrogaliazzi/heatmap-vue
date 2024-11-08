@@ -7,6 +7,7 @@ import AddClientForm from "./AddClientForm.vue";
 import ClientesOnuCard from "../ClientesOnuModalDialog/ClientesOnuCard.vue";
 import fetchApi from "@/api";
 import CeCard from "@/components/CeModalDialog/CeCard.vue";
+import CtoNotes from "./CtoNotes.vue";
 
 const { cto, tomodatView } = defineProps(["cto", "tomodatView"]);
 const emit = defineEmits(["setCtoFromChild"]);
@@ -14,41 +15,70 @@ const emit = defineEmits(["setCtoFromChild"]);
 const ctoNotes = ref(false);
 const apConnList = ref([]);
 
-const fiberColor = {
-  1: "verde",
-  2: "amarela",
-  3: "branca",
-  4: "azul",
-  5: "vermelha",
-  6: "violeta",
-  7: "marrom",
-  8: "rosa",
-  9: "preta",
-  10: "cinza",
-  11: "laranja",
-  12: "acqua",
+const slideNumber = ref(1);
+
+const saveNote = async (note) => {
+  try {
+    const response = await fetchApi.post("/notes", note);
+
+    const savedNote = response.data;
+    return savedNote; // Optionally return the saved note data
+  } catch (error) {
+    console.error("Erro ao salvar nota:", error);
+    throw error; // Re-throw the error for potential handling in calling code
+  }
 };
 
-const slideNumber = ref(1);
+const processAndSaveTomodatNotes = async (tomodatData) => {
+  const notes = tomodatData
+    .map((d) => d.connection_slot_notes)
+    .filter((note) => note.length > 0);
+
+  if (notes.length > 0) {
+    const documents = notes.flat().map((n) => {
+      const { id, note, slot_number } = n;
+      return {
+        id,
+        note,
+        slot_number,
+        access_point_id: cto.id,
+      };
+    });
+
+    await Promise.all(
+      documents.map((note) => {
+        return saveNote(note);
+      })
+    );
+  }
+};
+
+const fetchNotes = async () => {
+  try {
+    const notes = await fetchApi("notes/access-point/" + cto.id);
+
+    return notes.data.length > 0 ? notes.data : false;
+  } catch (error) {
+    console.error("Erro ao buscar notas");
+  }
+};
+
+const notesKey = ref(1);
+
+const onNotesReload = async () => {
+  ctoNotes.value = await fetchNotes();
+
+  notesKey.value++;
+};
 
 onMounted(async () => {
   const response = await fetchApi("connections/" + cto.id);
 
   apConnList.value = response.data;
 
-  console.log(apConnList.value);
+  await processAndSaveTomodatNotes(response.data);
 
-  const notes = response.data
-    .map((d) => d.connection_slot_notes)
-    .filter((note) => note.length > 0);
-
-  if (notes.length > 0)
-    ctoNotes.value = notes.flat().map((n) => ({
-      id: n.id,
-      note: n.note,
-      color: fiberColor[n.slot_number]?.toUpperCase(),
-      slot: n.slot_number,
-    }));
+  ctoNotes.value = await fetchNotes();
 });
 
 const closeDialog = inject("closeDialog");
@@ -102,10 +132,10 @@ const handleSplliterStatus = computed(() => {
 
 const openNewGMapTab = (position) => {
   let url = "";
-  if(confirm("deseja abrir este link no waze?")) {
+  if (confirm("deseja abrir este link no waze?")) {
     url = `https://www.waze.com/ul?ll=${position.lat}%2C${position.lng}&navigate=yes&zoom=17`;
   } else {
-    url = `https://www.google.com/maps/search/?api=1&query=${position.lat},${position.lng}`
+    url = `https://www.google.com/maps/search/?api=1&query=${position.lat},${position.lng}`;
   }
   const win = window.open(url, "_blank");
   win.focus();
@@ -289,8 +319,13 @@ const onClientPositionSelected = async ({ client, position }) => {
         <v-card-text class="pa-5">
           <CtoClientsList
             :clients="cto.clients"
-            :notes="ctoNotes"
             @adduser:location="(client) => createMarker(client)"
+          />
+          <CtoNotes
+            :notes="ctoNotes"
+            :ctoId="cto.id"
+            @reload-notes="onNotesReload"
+            :key="notesKey"
           />
         </v-card-text>
       </v-window-item>

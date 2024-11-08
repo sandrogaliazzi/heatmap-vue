@@ -63,32 +63,32 @@ const calcSignal = (gponData) => {
 };
 
 const selectRamal = async (ramal) => {
-  loading.value = true;
-  gponData.value = [];
+  // loading.value = true;
+  // gponData.value = [];
 
-  const { oltIp, oltPon } = ramal;
+  // const { oltIp, oltPon } = ramal;
 
-  const [gponSignals, gponNames] = await Promise.all([
-    fetchApi.post("verificar-pon", { oltIp, oltPon }),
-    fetchApi.post("verificar-onu-name-pon", { oltIp, oltPon }),
-  ]);
+  // const [gponSignals, gponNames] = await Promise.all([
+  //   fetchApi.post("verificar-pon", { oltIp, oltPon }),
+  //   fetchApi.post("verificar-onu-name-pon", { oltIp, oltPon }),
+  // ]);
 
-  for (const mac in gponSignals.data) {
-    const onuData = gponSignals.data[mac];
-    const onuAliasMatch = gponNames.data.find((item) => item.mac === mac);
+  // for (const mac in gponSignals.data) {
+  //   const onuData = gponSignals.data[mac];
+  //   const onuAliasMatch = gponNames.data.find((item) => item.mac === mac);
 
-    if (onuAliasMatch) {
-      gponData.value.push({
-        ...onuData,
-        name: onuAliasMatch.name,
-      });
-    }
-  }
+  //   if (onuAliasMatch) {
+  //     gponData.value.push({
+  //       ...onuData,
+  //       name: onuAliasMatch.name,
+  //     });
+  //   }
+  // }
 
-  ponSignals.value = calcSignal(gponData.value);
-  cardId.value = ramal._id;
-  console.log(gponSignals);
-  loading.value = false;
+  // ponSignals.value = calcSignal(gponData.value);
+  // cardId.value = ramal._id;
+  // loading.value = false;
+  console.log(ramal._id);
 };
 
 onMounted(async () => {
