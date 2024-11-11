@@ -8,11 +8,13 @@ import ClientesOnuCard from "../ClientesOnuModalDialog/ClientesOnuCard.vue";
 import fetchApi from "@/api";
 import CeCard from "@/components/CeModalDialog/CeCard.vue";
 import CtoNotes from "./CtoNotes.vue";
+import CtoConectors from "./CtoConectors.vue";
 
 const { cto, tomodatView } = defineProps(["cto", "tomodatView"]);
 const emit = defineEmits(["setCtoFromChild"]);
 
 const ctoNotes = ref(false);
+const conectors = ref([]);
 const apConnList = ref([]);
 
 const slideNumber = ref(1);
@@ -71,7 +73,17 @@ const onNotesReload = async () => {
   notesKey.value++;
 };
 
+const getMkRetiradasDeConector = async (cto) => {
+  const response = await fetchApi("/listar-os-retiradas-conector/" + cto);
+
+  return response.data;
+};
+
 onMounted(async () => {
+  console.log(cto);
+
+  conectors.value = await getMkRetiradasDeConector(cto.name);
+
   const response = await fetchApi("connections/" + cto.id);
 
   apConnList.value = response.data;
@@ -350,7 +362,19 @@ const onClientPositionSelected = async ({ client, position }) => {
           >
         </v-card-actions>
       </v-window-item>
-      <v-window-item :value="3" v-if="apConnList.length > 0">
+      <v-window-item :value="3">
+        <CtoConectors
+          :conector-os-list="conectors"
+          :cto="cto.name"
+          v-if="conectors.length > 0"
+        />
+        <v-card
+          v-else
+          class="py-5"
+          title="NÃO HÁ RETIRADAS DE CONECTOR"
+        ></v-card>
+      </v-window-item>
+      <v-window-item :value="4" v-if="apConnList.length > 0">
         <CeCard
           :ce="apConnList"
           @new-cto-selected="(ctoData) => emit('setCtoFromChild', ctoData)"
