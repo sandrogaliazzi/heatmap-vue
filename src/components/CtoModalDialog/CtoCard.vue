@@ -385,7 +385,7 @@ const onClientPositionSelected = async ({ client, position }) => {
         ></CeCard>
       </v-window-item>
     </v-window>
-    <v-card-actions>
+    <v-card-actions v-if="slideNumber == 1">
       <v-btn
         block
         variant="tonal"
