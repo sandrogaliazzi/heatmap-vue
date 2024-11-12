@@ -74,15 +74,15 @@ const onNotesReload = async () => {
 };
 
 const getMkRetiradasDeConector = async (cto) => {
-  const response = await fetchApi("/listar-os-retiradas-conector/" + cto);
+  const response = await fetchApi(
+    `/listar-os-retiradas-conector/${cto.name}/${cto.city}`
+  );
 
   return response.data;
 };
 
 onMounted(async () => {
-  console.log(cto);
-
-  conectors.value = await getMkRetiradasDeConector(cto.name);
+  conectors.value = await getMkRetiradasDeConector(cto);
 
   const response = await fetchApi("connections/" + cto.id);
 
@@ -283,7 +283,11 @@ const onClientPositionSelected = async ({ client, position }) => {
           variant="text"
           @click="handleUserLocation"
         />
-        <v-btn icon="mdi-connection" variant="text" @click="setViewMode" />
+        <v-btn variant="text" @click="setViewMode">
+          <v-badge color="error" :content="conectors.length" floating>
+            <v-icon>mdi-connection</v-icon>
+          </v-badge>
+        </v-btn>
         <v-btn
           v-if="slideNumber < 2"
           icon="mdi-account-plus"

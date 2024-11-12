@@ -34,15 +34,17 @@ const sendMessageToTelegram = async (bodyRequest) => {
 };
 
 const createMessage = (info) => {
-  info.cto = cto;
-  info.user = userStore.user.name;
-  info.retirado = true;
+  if (confirm("Confirmar esta ação?")) {
+    info.cto = cto;
+    info.user = userStore.user.name;
+    info.retirado = true;
 
-  try {
-    sendMessageToTelegram(info);
-    console.log("CONECTOR RETIRADO");
-  } catch (error) {
-    console.log(error);
+    try {
+      sendMessageToTelegram(info);
+      alert("Ação confirmada");
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
 </script>
