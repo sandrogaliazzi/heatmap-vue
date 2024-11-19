@@ -79,6 +79,8 @@ const formatVlan = (vlan) => {
 };
 
 const checkAllSignal = async (onuList) => {
+  signalList.value = {};
+
   const signals = onuList.map(async (onu) => await checkOnuSignal(onu));
 
   await Promise.all(signals);
@@ -88,20 +90,25 @@ const checkAllSignal = async (onuList) => {
 <template>
   <v-list lines="two">
     <v-list-subheader>
-      <v-chip color="success" v-if="!isNaN(signalCalc.tx)"
-        >Média sinal | TX:{{ signalCalc.tx.toFixed(2) }} RX:
-        {{ signalCalc.rx.toFixed(2) }}
-      </v-chip>
-
-      <v-btn
-        color="success"
-        rounded="xl"
-        variant="tonal"
-        :loading="isLoadingSignal"
-        @click="checkAllSignal(onuList)"
-        v-else-if="isNaN(signalCalc.tx) && onuList.length <= 500"
-        >Calcular sinal
-      </v-btn>
+      <div>
+        <v-btn
+          color="success"
+          rounded="xl"
+          variant="tonal"
+          :loading="isLoadingSignal"
+          @click="checkAllSignal(onuList)"
+          v-if="onuList.length <= 128"
+          class="mr-3"
+          >Calcular sinal
+        </v-btn>
+        <v-chip color="primary" v-if="!isNaN(signalCalc.tx)"
+          >Média sinal | TX:{{ signalCalc.tx.toFixed(2) }} RX:
+          {{ signalCalc.rx.toFixed(2) }}
+        </v-chip>
+      </div>
+      <v-chip color="orange" class="my-3"
+        >Clientes: {{ onuList.length }}</v-chip
+      >
     </v-list-subheader>
     <v-virtual-scroll
       class="pt-0"

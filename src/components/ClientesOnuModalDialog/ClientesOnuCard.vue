@@ -4,8 +4,12 @@ import OnuList from "./OnuList.vue";
 import fetchApi from "@/api";
 
 const { clients } = defineProps(["clients"]);
+const emit = defineEmits(["exit"]);
 
 const onuList = ref([]);
+const onuListCopy = ref([]);
+const vLanList = ref([]);
+const selectedVlan = ref(null);
 const closeDialog = inject("closeDialog");
 const query = ref("");
 const olts = [
@@ -50,9 +54,9 @@ const olts = [
     name: "PARKS 10",
   },
   {
-    ip:"172.16.11.2",
-    name:"PARKS 11"
-  }
+    ip: "172.16.11.2",
+    name: "PARKS 11",
+  },
 ];
 
 const fetchAllOnu = async () => {
@@ -65,6 +69,18 @@ const fetchAllOnu = async () => {
 
   const allOnuData = await Promise.all(promiseList);
   onuList.value = allOnuData.flat();
+  onuListCopy.value = onuList.value;
+  vLanList.value = onuList.value
+    .map((onu) => {
+      if (onu.flowProfile) return onu.flowProfile;
+    })
+    .filter((value) => value)
+    .reduce((acc, val) => {
+      if (!acc.includes(val)) {
+        acc.push(val);
+      }
+      return acc;
+    }, []);
 };
 
 watch(query, () => {
@@ -78,6 +94,13 @@ const filterOnuList = computed(() => {
     if (onu.name) {
       return onu.name.includes(query.value);
     }
+  });
+});
+
+watch(selectedVlan, (vlan) => {
+  onuList.value = onuListCopy.value;
+  onuList.value = onuList.value.filter((onu) => {
+    return onu?.flowProfile == vlan;
   });
 });
 
@@ -105,8 +128,10 @@ const findOnuListFromCto = () => {
 
   if (!onuMatchList.length) {
     alert("Clientes não identificados na olt");
+    emit("exit");
   } else {
     onuList.value = onuMatchList;
+    onuListCopy.value = onuMatchList;
   }
 };
 
@@ -144,6 +169,15 @@ onMounted(async () => {
               hide-details
               class="mb-3"
             ></v-text-field>
+          </v-col>
+          <v-col cols="12" class="mt-3">
+            <v-autocomplete
+              chips
+              variant="outlined"
+              label="Selecionar por Vlan"
+              :items="vLanList"
+              v-model="selectedVlan"
+            ></v-autocomplete>
           </v-col>
         </v-row>
         <v-row no-gutters>

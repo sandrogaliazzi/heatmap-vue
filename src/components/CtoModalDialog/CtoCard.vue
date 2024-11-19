@@ -395,7 +395,11 @@ const onClientPositionSelected = async ({ client, position }) => {
         verfificar sinal
       </v-btn>
     </v-card-actions>
-    <ClientesOnuCard v-if="showOnuCard" :clients="cto.clients">
+    <ClientesOnuCard
+      v-if="showOnuCard"
+      :clients="cto.clients"
+      @exit="showOnuCard = false"
+    >
       <template #header>
         <span class="d-none"></span>
       </template>
