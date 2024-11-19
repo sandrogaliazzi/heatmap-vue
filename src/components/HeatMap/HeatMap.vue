@@ -104,7 +104,16 @@ watch(polygonRef, (polygon) => {
   if (polygon) {
     polygon.$polygonPromise.then((area) => {
       const isWithinPolygon = getMarkersData.value.filter((marker) => {
-        return area.containsLatLng(marker.position.lat, marker.position.lng);
+        const multiples = store.queryCto.toUpperCase().split(",");
+
+        if (multiples.length > 1) {
+          return area.containsLatLng(marker.position.lat, marker.position.lng) && 
+          multiples.some((query) => marker.title.includes(query));
+        } else {
+          return area.containsLatLng(marker.position.lat, marker.position.lng) && 
+          marker.title.includes(store.queryCto.toUpperCase())
+        }
+
       });
 
       showSideBar(isWithinPolygon);
