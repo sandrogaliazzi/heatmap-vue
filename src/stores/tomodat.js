@@ -13,6 +13,7 @@ export const useTomodatStore = defineStore("tomodat", () => {
   const mapZoom = ref(11);
   const selectedUserLocation = ref(null);
   const isEventMarkerVisible = ref(false);
+  const isCableVisible = ref(true);
   const setPolygonDrawMode = ref(false);
 
   // async function getTomodatData() {
@@ -33,17 +34,17 @@ export const useTomodatStore = defineStore("tomodat", () => {
 
   async function getTomodatData() {
     try {
-        const ctoResponse = await fetchApi.get("/newfetch");
-        ctoList.value = ctoResponse.data;
+      const ctoResponse = await fetchApi.get("/newfetch");
+      ctoList.value = ctoResponse.data;
 
-        const cableResponse = await fetchApi.get("/cables");
-        cableList.value = cableResponse.data;
+      const cableResponse = await fetchApi.get("/cables");
+      cableList.value = cableResponse.data;
 
-        loadingData.value = false;
+      loadingData.value = false;
     } catch (error) {
-        console.error("Error fetching Tomodat data:", error);
+      console.error("Error fetching Tomodat data:", error);
     }
-}
+  }
 
   async function getAllLocatedClients() {
     const response = await fetchApi.get("ctoclient");
@@ -193,5 +194,6 @@ export const useTomodatStore = defineStore("tomodat", () => {
     setPolygonDrawMode,
     loadingData,
     mapZoom,
+    isCableVisible,
   };
 });

@@ -10,6 +10,7 @@ import OnuModalDialog from "@/components/OnuModalDialog/OnuModalDialog";
 import EmailModalDialog from "@/components/EmailModalDialog/EmailModalDialog";
 import ClientesOnuCard from "@/components/ClientesOnuModalDialog/ClientesOnuCard";
 import RamalCard from "@/components/RamalModalDialog/RamalCard";
+import OsMap from "./OsMap.vue";
 
 const tomodatStore = useTomodatStore();
 const { selectedCto } = storeToRefs(tomodatStore);
@@ -31,6 +32,7 @@ const openOnuDialog = ref(false);
 const openEmailDialog = ref(false);
 const openClientsOnuDialog = ref(false);
 const openRamalDialog = ref(false);
+const openOsDialog = ref(false);
 const onuKey = ref(1);
 
 const emit = defineEmits(["logout:user"]);
@@ -42,6 +44,7 @@ const onCloseDialog = (value) => {
   openEmailDialog.value = value;
   openClientsOnuDialog.value = value;
   openRamalDialog.value = value;
+  openOsDialog.value = value;
 };
 </script>
 
@@ -84,6 +87,13 @@ const onCloseDialog = (value) => {
         value="camera"
         color="orange"
         @click="openCameraDialog = true"
+      ></v-list-item>
+      <v-list-item
+        prepend-icon="mdi-flag-variant"
+        title="Ordens Suporte"
+        value="ordens"
+        color="orange"
+        @click="openOsDialog = true"
       ></v-list-item>
       <v-list-item
         prepend-icon="mdi-logout"
@@ -172,5 +182,12 @@ const onCloseDialog = (value) => {
   </DialogBox>
   <DialogBox :isOpen="openRamalDialog" @update:modalValue="onCloseDialog">
     <RamalCard />
+  </DialogBox>
+  <DialogBox
+    :isOpen="openOsDialog"
+    :isFull="true"
+    @update:modalValue="onCloseDialog"
+  >
+    <OsMap />
   </DialogBox>
 </template>

@@ -53,6 +53,13 @@ const toggleMarkers = (marker) => {
     <v-btn icon @click="toggleMarkers('ce')">
       <v-icon :color="ce ? 'blue' : ''">mdi-chess-rook</v-icon>
     </v-btn>
+    <v-btn icon>
+      <v-icon
+        :color="tomodatStore.isCableVisible ? 'blue' : ''"
+        @click="tomodatStore.isCableVisible = !tomodatStore.isCableVisible"
+        >mdi-cable-data</v-icon
+      >
+    </v-btn>
     <v-btn
       icon
       @click="

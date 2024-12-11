@@ -107,13 +107,16 @@ watch(polygonRef, (polygon) => {
         const multiples = store.queryCto.toUpperCase().split(",");
 
         if (multiples.length > 1) {
-          return area.containsLatLng(marker.position.lat, marker.position.lng) && 
-          multiples.some((query) => marker.title.includes(query));
+          return (
+            area.containsLatLng(marker.position.lat, marker.position.lng) &&
+            multiples.some((query) => marker.title.includes(query))
+          );
         } else {
-          return area.containsLatLng(marker.position.lat, marker.position.lng) && 
-          marker.title.includes(store.queryCto.toUpperCase())
+          return (
+            area.containsLatLng(marker.position.lat, marker.position.lng) &&
+            marker.title.includes(store.queryCto.toUpperCase())
+          );
         }
-
       });
 
       showSideBar(isWithinPolygon);
@@ -179,7 +182,7 @@ const onReloadEvent = () => {
   loadEvents();
 };
 
-onMounted(() => {
+onMounted(async () => {
   setInterval(() => {
     loadEvents();
   }, 10000);
@@ -254,7 +257,10 @@ onMounted(() => {
       @open:ce-dialog="(id) => getCeById(id)"
     />
 
-    <Cables v-if="cableList.length > 0" :cables="cableList" />
+    <Cables
+      v-if="cableList.length > 0 && store.isCableVisible"
+      :cables="cableList"
+    />
 
     <GMapPolygon
       ref="polygonRef"
