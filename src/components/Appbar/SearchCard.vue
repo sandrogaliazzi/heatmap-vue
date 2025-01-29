@@ -1,5 +1,5 @@
 <script setup>
-import { inject, ref, watch } from "vue";
+import { inject, ref, watch, onMounted } from "vue";
 import { useTomodatStore } from "@/stores/tomodat";
 import { storeToRefs } from "pinia";
 
@@ -48,6 +48,12 @@ watch(query, () => {
   }
   localStorage.setItem("lastQuery", query.value);
 });
+
+const myInput = ref(null);
+
+onMounted(() => {
+  myInput.value.focus();
+});
 </script>
 
 <template>
@@ -63,6 +69,7 @@ watch(query, () => {
         clearable
         prepend-inner-icon="mdi-magnify"
         v-model="query"
+        ref="myInput"
       >
       </v-text-field>
       <div

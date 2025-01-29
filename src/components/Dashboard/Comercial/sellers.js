@@ -13,8 +13,8 @@ export default {
       goal: 25,
     },
     {
-      name: "YAN",
-      avatar: "../src/assets/SELLERS/yan.jpg",
+      name: "EDIANA",
+      avatar: "../src/assets/SELLERS/EDIANA.jpg",
       sellerClass: 0,
       goal: 15,
     },

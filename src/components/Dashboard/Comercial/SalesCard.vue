@@ -90,7 +90,7 @@ const fetchSales = async (seller) => {
               <span class="ml-3 text-emphasis">{{
                 sales.filter((sale) => sale.seller == seller.name).length
               }}</span>
-              <v-progress-linear
+              <!-- <v-progress-linear
                 v-if="filter === 'month' && seller.goal && seller.name != 'MARONES'"
                 :location="false"
                 bg-color="#92aed9"
@@ -103,8 +103,8 @@ const fetchSales = async (seller) => {
                 "
                 rounded
               >
-              </v-progress-linear>
-              <div
+              </v-progress-linear> -->
+              <!-- <div
                 v-if="filter === 'month' && seller.goal && seller.name != 'MARONES'"
                 class="d-flex flex-column align-center"
               >
@@ -113,7 +113,7 @@ const fetchSales = async (seller) => {
                   sales.filter((sale) => sale.seller == seller.name).length
                 }}</span>
                 <span class="text-small">Faltam</span>
-              </div>
+              </div> -->
             </div>
           </v-list-item-title>
         </v-list-item>
@@ -138,7 +138,7 @@ const fetchSales = async (seller) => {
               <span class="ml-3 text-emphasis">{{
                 sales.filter((sale) => sale.seller == seller.name).length
               }}</span>
-              <v-progress-linear
+              <!-- <v-progress-linear
                 v-if="filter === 'month' && seller.goal"
                 :location="false"
                 bg-color="#92aed9"
@@ -150,8 +150,8 @@ const fetchSales = async (seller) => {
                   sales.filter((sale) => sale.seller == seller.name).length
                 "
                 rounded
-              ></v-progress-linear>
-              <div
+              ></v-progress-linear> -->
+              <!-- <div
                 v-if="filter === 'month' && seller.goal"
                 class="d-flex flex-column align-center"
               >
@@ -160,7 +160,7 @@ const fetchSales = async (seller) => {
                   sales.filter((sale) => sale.seller == seller.name).length
                 }}</span>
                 <span class="text-small">Faltam</span>
-              </div>
+              </div> -->
             </div>
           </v-list-item-title>
         </v-list-item>
