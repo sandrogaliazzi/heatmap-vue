@@ -16,27 +16,27 @@ const search = ref("");
 const headers = ref([
   {
     align: "start",
-    key: "name",
+    key: "alias",
     sortable: false,
     title: "Nome",
   },
-  { key: "Status", title: "status" },
-  { key: "Power Level", title: "Rx Sinal" },
-  { key: "RSSI", title: "Tx sinal" },
+  { key: "status", title: "status" },
+  { key: "tx", title: "Tx sinal" },
+  { key: "rx", title: "Rx Sinal" },
 ]);
 
-const Currentdata = computed(() => {
-  return onuList.map((onu) => {
-    if (onu.status == "ACTIVE (PROVISIONED)") {
-      onu["Powe Level"] = parseFloat(
-        onu["Power Level"].split(" ")[0].slice(0, 6)
-      );
-      onu["RSSI"] = parseFloat(onu["RSSI"].split(" ")[0].slice(0, 6));
-    }
+// const Currentdata = computed(() => {
+//   return onuList.map((onu) => {
+//     if (onu.status == "ACTIVE (PROVISIONED)") {
+//       onu["Powe Level"] = parseFloat(
+//         onu["Power Level"].split(" ")[0].slice(0, 6)
+//       );
+//       onu["RSSI"] = parseFloat(onu["RSSI"].split(" ")[0].slice(0, 6));
+//     }
 
-    return onu;
-  });
-});
+//     return onu;
+//   });
+// });
 
 const saveGponData = async () => {
   const save = await fetchApi.post("ramal-log-register", {
@@ -44,6 +44,8 @@ const saveGponData = async () => {
     date_time: new Date().toLocaleString("pt-BR"),
     gpon_data: onuList,
   });
+
+  console.log(save);
 
   if (save.status === 200) {
     notification.setNotification({
@@ -114,7 +116,7 @@ onMounted(async () => {
 
         <v-data-table
           :headers="headers"
-          :items="prevData ? prevData : Currentdata"
+          :items="prevData ? prevData : onuList"
           :search="search"
         ></v-data-table>
       </v-card>

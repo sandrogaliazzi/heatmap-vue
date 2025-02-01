@@ -51,7 +51,7 @@ const login = () => {
       <router-view></router-view>
       <!-- <teste /> -->
     </v-main>
-    <!-- <Notification /> -->
+    <Notification />
     <v-dialog v-model="tokenExpired" persistent width="auto">
       <v-sheet
         class="pa-4 text-center mx-auto"

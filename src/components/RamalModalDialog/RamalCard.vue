@@ -3,12 +3,12 @@ import { ref, onMounted, inject, computed } from "vue";
 import fetchApi from "@/api";
 
 import PonSignal from "./PonSingal";
-import { load } from "webfontloader";
 
 const isLoadingRamals = ref(true);
 const ramals = ref([]);
 const query = ref("");
-const ponSignals = ref({});
+const ponSignals = ref([]);
+const average = ref(0);
 const gponData = ref([]);
 const cardId = ref("");
 const loading = ref(false);
@@ -35,60 +35,47 @@ const getRamals = async () => {
   }
 };
 
-const calcSignal = (gponData) => {
-  if (!gponData.length) return false;
+function calculateAverages(data) {
+  if (data.length === 0) {
+    return { avgTx: null, avgRx: null };
+  }
 
-  const txList = gponData
-    .map((onu) => {
-      return parseFloat(onu["Power Level"].split(" ")[0].slice(0, 6));
-    })
-    .filter((num) => !isNaN(num))
-    .sort();
+  let totalTx = 0;
+  let totalRx = 0;
 
-  const rxList = gponData
-    .map((onu) => {
-      return parseFloat(onu["RSSI"].split(" ")[0].slice(0, 6));
-    })
-    .filter((num) => !isNaN(num))
-    .sort();
+  for (const item of data) {
+    totalTx += item.tx;
+    totalRx += item.rx;
+  }
 
-  const avgTxCalc = (
-    txList.reduce((acc, val) => acc + val) / txList.length
-  ).toFixed(2);
-  const avgRxCalc = (
-    rxList.reduce((acc, val) => acc + val) / rxList.length
-  ).toFixed(2);
+  const avgTx = totalTx / data.length;
+  const avgRx = totalRx / data.length;
 
-  return { txList, rxList, avgRxCalc, avgTxCalc };
-};
+  return {
+    tx: parseFloat(avgTx.toFixed(2)),
+    rx: parseFloat(avgRx.toFixed(2)),
+  };
+}
 
 const selectRamal = async (ramal) => {
-  // loading.value = true;
-  // gponData.value = [];
+  cardId.value = ramal._id;
+  loading.value = true;
+  gponData.value = [];
 
-  // const { oltIp, oltPon } = ramal;
+  const { oltIp, oltPon } = ramal;
 
-  // const [gponSignals, gponNames] = await Promise.all([
-  //   fetchApi.post("verificar-pon", { oltIp, oltPon }),
-  //   fetchApi.post("verificar-onu-name-pon", { oltIp, oltPon }),
-  // ]);
+  console.log(oltIp, oltPon);
 
-  // for (const mac in gponSignals.data) {
-  //   const onuData = gponSignals.data[mac];
-  //   const onuAliasMatch = gponNames.data.find((item) => item.mac === mac);
+  const ponSignalsData = await fetchApi.post("verificar-pon", {
+    oltIp,
+    oltPon,
+  });
 
-  //   if (onuAliasMatch) {
-  //     gponData.value.push({
-  //       ...onuData,
-  //       name: onuAliasMatch.name,
-  //     });
-  //   }
-  // }
+  ponSignals.value = ponSignalsData.data;
+  average.value = calculateAverages(ponSignalsData.data);
 
-  // ponSignals.value = calcSignal(gponData.value);
-  // cardId.value = ramal._id;
-  // loading.value = false;
-  console.log(ramal._id);
+  console.log(ponSignalsData.data);
+  loading.value = false;
 };
 
 onMounted(async () => {
@@ -136,7 +123,7 @@ onMounted(async () => {
                 :subtitle="ramal.oltRamal"
                 variant="elevated"
                 class="mb-3"
-                :loading="loading"
+                :loading="loading && cardId === ramal._id"
                 link
               >
                 <template #prepend>
@@ -145,27 +132,27 @@ onMounted(async () => {
                 <v-card-text v-if="ponSignals && cardId == ramal._id">
                   <p>
                     <v-icon icon="mdi-chevron-double-up"></v-icon>
-                    TX Média: {{ ponSignals.avgTxCalc }}dbm
+                    TX Média: {{ average.tx }}dbm
                   </p>
                   <p>
                     <v-icon icon="mdi-chevron-double-down"></v-icon>
-                    RX Média: {{ ponSignals.avgRxCalc }}dbm
+                    RX Média: {{ average.rx }}dbm
                   </p>
                   <p class="mt-2">
                     <v-icon icon="mdi-circle-box"></v-icon>
-                    ONUS Total: {{ ponSignals.txList.length }}
+                    ONUS Total: {{ ponSignals.length }}
                   </p>
                 </v-card-text>
                 <v-card-text v-else-if="cardId == ramal._id">
                   <p>Não há clientes cadastrados neste ramal</p>
                 </v-card-text>
                 <v-card-text>
-                 <!--<v-btn
+                  <v-btn
                     color="primary"
                     variant="tonal"
                     @click="selectRamal(ramal)"
                     >Ver Sinais
-                  </v-btn> -->
+                  </v-btn>
                   <v-btn
                     v-if="ponSignals && cardId == ramal._id"
                     class="ml-2"
@@ -174,7 +161,7 @@ onMounted(async () => {
                   >
                     Exibir lista
                     <v-dialog activator="parent" width="auto">
-                      <PonSignal :onuList="gponData" :ramal="ramal" />
+                      <PonSignal :onuList="ponSignals" :ramal="ramal" />
                     </v-dialog>
                   </v-btn>
                 </v-card-text>
