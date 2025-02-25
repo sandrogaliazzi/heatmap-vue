@@ -50,6 +50,10 @@ const olts = [
     name: "PARKS 12"
   },
   {
+    ip:"192.168.213.2",
+    name: "PARKS 13"
+  },
+  {
     ip: "172.16.9.10",
     name: "PARKS 9",
   },

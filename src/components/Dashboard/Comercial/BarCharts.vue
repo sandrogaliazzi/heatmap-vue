@@ -67,9 +67,6 @@ const citys = ref([
 const sellers = ref([
   "FELIPE",
   "LUIS FELIPE",
-  "JEFERSON",
-  "MARONES",
-  "YAN",
   "NADINE",
   "JANICE",
   "JESSICA",

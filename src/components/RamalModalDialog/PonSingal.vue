@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useNotificationStore } from "@/stores/notification";
+import signalChart from "./signalChart.vue";
 
 const { onuList, ramal } = defineProps(["onuList", "ramal"]);
 import fetchApi from "@/api";
@@ -10,8 +11,34 @@ const notification = useNotificationStore();
 const ramalHistory = ref([]);
 const prevData = ref(false);
 const selectedDate = ref("");
+const showChart = ref(false);
+const avgRxList = ref([]);
+const avgTxList = ref([]);
+const labels = ref("");
 
 const search = ref("");
+
+function calculateAverages(data) {
+  if (data.length === 0) {
+    return { avgTx: null, avgRx: null };
+  }
+
+  let totalTx = 0;
+  let totalRx = 0;
+
+  for (const item of data) {
+    totalTx += item.tx;
+    totalRx += item.rx;
+  }
+
+  const avgTx = totalTx / data.length;
+  const avgRx = totalRx / data.length;
+
+  return {
+    tx: parseFloat(avgTx.toFixed(2)),
+    rx: parseFloat(avgRx.toFixed(2)),
+  };
+}
 
 const headers = ref([
   {
@@ -25,24 +52,12 @@ const headers = ref([
   { key: "rx", title: "Rx Sinal" },
 ]);
 
-// const Currentdata = computed(() => {
-//   return onuList.map((onu) => {
-//     if (onu.status == "ACTIVE (PROVISIONED)") {
-//       onu["Powe Level"] = parseFloat(
-//         onu["Power Level"].split(" ")[0].slice(0, 6)
-//       );
-//       onu["RSSI"] = parseFloat(onu["RSSI"].split(" ")[0].slice(0, 6));
-//     }
-
-//     return onu;
-//   });
-// });
-
 const saveGponData = async () => {
   const save = await fetchApi.post("ramal-log-register", {
     id: ramal._id,
     date_time: new Date().toLocaleString("pt-BR"),
     gpon_data: onuList,
+    avgSignal: calculateAverages(onuList)
   });
 
   console.log(save);
@@ -58,6 +73,7 @@ const saveGponData = async () => {
       status: "red",
     });
   }
+  
 };
 
 const setDataByDate = (data) => {
@@ -69,6 +85,9 @@ onMounted(async () => {
   const response = await fetchApi(`find-ramal-logs/${ramal._id}`);
   if (response.status === 200) {
     ramalHistory.value = response.data.ramalHistory;
+    avgRxList.value = ramalHistory.value.map(item => item.avgSignal.rx);
+    avgTxList.value = ramalHistory.value.map(item => item.avgSignal.tx);
+    labels.value = ramalHistory.value.map(item => item.date_time);
   }
 });
 </script>
@@ -77,7 +96,9 @@ onMounted(async () => {
   <v-card>
     <v-card-text>
       <v-card flat>
-        <v-card-title> </v-card-title>
+        <v-card-title> 
+          <signal-chart v-if="showChart" :tx="avgTxList" :rx="avgRxList" :labels="labels"/>
+        </v-card-title>
         <v-card-title>
           Lista clientes {{ ramal.oltRamal }}
           <v-chip
@@ -89,7 +110,7 @@ onMounted(async () => {
             {{ selectedDate }}
           </v-chip>
         </v-card-title>
-        <v-btn color="orange" variant="tonal" v-if="ramalHistory.length > 0">
+        <v-btn color="orange" variant="tonal" v-if="ramalHistory.length > 0" @click="showChart = !showChart">
           Ver histórico
           <v-menu activator="parent">
             <v-list>

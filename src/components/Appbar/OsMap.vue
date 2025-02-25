@@ -5,8 +5,8 @@ import OsMarkers from "../HeatMap/OsMarkers.vue";
 
 const model = ref(null);
 
-const letters = ["e", "i", "l", "w"];
-const tecIdList = [1877, 5180, 5291, 12014];
+const letters = ["e", "i", "l", "w", "c"];
+const tecIdList = [1877, 5180, 5291, 12014, 8715];
 
 const adressList = ref([]);
 
@@ -89,7 +89,7 @@ const closeDialog = inject("closeDialog");
         v-model="model"
         class="d-flex justify-sm-space-between px-6 pt-2 pb-6 mb-5"
       >
-        <v-item v-for="n in 4" :key="n">
+        <v-item v-for="n in 5" :key="n">
           <template v-slot:default="{ toggle }">
             <v-btn
               :icon="`mdi-alpha-${letters[n - 1]}`"

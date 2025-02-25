@@ -8,7 +8,7 @@ const isLoadingRamals = ref(true);
 const ramals = ref([]);
 const query = ref("");
 const ponSignals = ref([]);
-const average = ref(0);
+const average = ref(null);
 const gponData = ref([]);
 const cardId = ref("");
 const loading = ref(false);
@@ -74,7 +74,6 @@ const selectRamal = async (ramal) => {
   ponSignals.value = ponSignalsData.data;
   average.value = calculateAverages(ponSignalsData.data);
 
-  console.log(ponSignalsData.data);
   loading.value = false;
 };
 
@@ -132,11 +131,11 @@ onMounted(async () => {
                 <v-card-text v-if="ponSignals && cardId == ramal._id">
                   <p>
                     <v-icon icon="mdi-chevron-double-up"></v-icon>
-                    TX Média: {{ average.tx }}dbm
+                    TX Média: {{ average?.tx }}dbm
                   </p>
                   <p>
                     <v-icon icon="mdi-chevron-double-down"></v-icon>
-                    RX Média: {{ average.rx }}dbm
+                    RX Média: {{ average?.rx }}dbm
                   </p>
                   <p class="mt-2">
                     <v-icon icon="mdi-circle-box"></v-icon>
