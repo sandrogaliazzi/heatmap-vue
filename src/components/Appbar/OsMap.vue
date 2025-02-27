@@ -1,7 +1,9 @@
 <script setup>
-import { inject, ref, watch, onMounted } from "vue";
+import { inject, ref, watch, onMounted, onUnmounted } from "vue";
 import fetchApi from "@/api";
 import OsMarkers from "../HeatMap/OsMarkers.vue";
+import vehicleOff from "@/assets/carro-desligado.png";
+import vehicleOn from "@/assets/carro-ligado.png";
 
 const model = ref(null);
 
@@ -51,9 +53,36 @@ const getMkSupportOsAdress = async (tecnicoId) => {
   return formatedAdresses;
 };
 
+const vehicleList = ref([]);
+const markerId = ref(null);
+
+const getLastVehiclePosition = async () => {
+  try {
+    const response = await fetchApi(`vehicles`);
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error(response);
+    }
+  } catch (error) {
+    alert("Não foi possível obter a localização dos veículos");
+    throw new Error("Erro api fulltrack " + error);
+  }
+};
+
+const updateVehiclePosition = setInterval(async () => {
+  vehicleList.value = await getLastVehiclePosition();
+  console.log("Posição do veículo atualizada");
+}, 5000);
+
 onMounted(async () => {
   adressList.value = await getMkSupportOsAdress(1877);
-  console.log(adressList.value);
+});
+
+onUnmounted(() => {
+  clearInterval(updateVehiclePosition);
+  console.log("contador zerado");
 });
 
 watch(model, async (modelValue) => {
@@ -115,6 +144,30 @@ const closeDialog = inject("closeDialog");
       ref="mapRef"
     >
       <OsMarkers :adress-list="adressList" />
+      <GMapMarker
+        v-for="(vehicle, index) in vehicleList"
+        :key="vehicle.ras_vei_id"
+        :icon="vehicle.ras_eve_ignicao === '1' ? vehicleOn : vehicleOff"
+        :position="{
+          lat: parseFloat(vehicle.ras_eve_latitude),
+          lng: parseFloat(vehicle.ras_eve_longitude),
+        }"
+        :clickable="true"
+        @click="markerId = index"
+      >
+        <GMapInfoWindow
+          :closeclick="true"
+          @closeclick="markerId = null"
+          :opened="markerId === index"
+        >
+          <div class="d-flex flex-column">
+            <p class="text-black text-h6">
+              {{ vehicle.ras_vei_veiculo }}
+            </p>
+            <p class="text-black">{{ vehicle.ras_vei_placa }}</p>
+          </div>
+        </GMapInfoWindow>
+      </GMapMarker>
     </GMapMap>
   </v-card>
 </template>

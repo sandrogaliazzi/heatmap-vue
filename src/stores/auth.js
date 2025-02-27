@@ -17,7 +17,6 @@ export const useAuthStore = defineStore("auth", () => {
     if (!token) return true;
     try {
       const { exp } = jwtDecode(token); // `exp` é o tempo de expiração em segundos
-      console.log(exp);
       return Date.now() >= exp * 1000;
     } catch (error) {
       tokenExpired.value = true;
