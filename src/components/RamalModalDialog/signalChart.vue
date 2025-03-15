@@ -2,6 +2,8 @@
 import { ref } from "vue";
 import { Line } from "vue-chartjs";
 
+const showChart = defineModel();
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -23,10 +25,22 @@ ChartJS.register(
   Legend
 );
 
-const {rx, tx, labels} = defineProps(["rx", "tx", "labels"]);
+const { rx, tx, labels, ramal } = defineProps(["rx", "tx", "labels", "ramal"]);
 
 const chartOptions = ref({
   responsive: true,
+  scales: {
+    x: {
+      ticks: {
+        display: false, // Oculta as labels do eixo X
+      },
+    },
+    y: {
+      ticks: {
+        display: true, // Oculta as labels do eixo Y
+      },
+    },
+  },
 });
 
 const chartData = ref({
@@ -43,11 +57,18 @@ const chartData = ref({
       backgroundColor: "#FF9800",
       borderColor: "#FF9800",
       data: tx,
-    }
+    },
   ],
 });
 </script>
 
 <template>
-  <Line id="my-chart-id" :options="chartOptions" :data="chartData" />
+  <v-dialog v-model="showChart" max-width="1200px">
+    <v-card>
+      <v-card-title>{{ ramal }}</v-card-title>
+      <v-card-text class="ma-5">
+        <Line id="my-chart-id" :options="chartOptions" :data="chartData" />
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>

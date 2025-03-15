@@ -86,6 +86,7 @@ const onCloseDialog = (value) => {
         title="Adicionar Câmera"
         value="camera"
         color="orange"
+        v-role="['adm', 'tecnico']"
         @click="openCameraDialog = true"
       ></v-list-item>
       <v-list-item
@@ -93,6 +94,7 @@ const onCloseDialog = (value) => {
         title="Ordens Suporte"
         value="ordens"
         color="orange"
+        v-role="['adm', 'tecnico']"
         @click="openOsDialog = true"
       ></v-list-item>
       <v-list-item
@@ -106,19 +108,20 @@ const onCloseDialog = (value) => {
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" title="Dashboard"></v-list-item>
         </template>
-        <v-list-item
+        <!-- <v-list-item
           prepend-icon="mdi-monitor-dashboard"
           title="Adm Painel"
           color="orange"
           value="Dashboard"
           to="/dashboard"
-        ></v-list-item>
+        ></v-list-item> -->
         <v-list-item
           prepend-icon="mdi-account-group"
           title="Usuários"
           color="orange"
           value="users"
           to="/users"
+          v-role="['adm']"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-web"
@@ -126,6 +129,7 @@ const onCloseDialog = (value) => {
           color="orange"
           value="logs"
           to="/logs"
+          v-role="['adm']"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-cctv"
@@ -133,6 +137,7 @@ const onCloseDialog = (value) => {
           value="cameras"
           color="orange"
           to="/camera"
+          v-role="['adm', 'tecnico']"
         ></v-list-item>
       </v-list-group>
       <v-list-item
@@ -140,6 +145,7 @@ const onCloseDialog = (value) => {
         title="Lista ONU"
         color="orange"
         value="ONU"
+        v-role="['adm', 'tecnico']"
         @click="openOnuDialog = true"
       ></v-list-item>
       <v-list-item
@@ -147,6 +153,7 @@ const onCloseDialog = (value) => {
         title="ONU PARKS"
         color="orange"
         value="onuParks"
+        v-role="['adm', 'tecnico']"
         @click="openClientsOnuDialog = true"
       ></v-list-item>
       <v-list-item
@@ -154,6 +161,7 @@ const onCloseDialog = (value) => {
         title="Olt Sinais"
         color="orange"
         value="oltSignals"
+        v-role="['adm', 'tecnico']"
         @click="openRamalDialog = true"
       ></v-list-item>
       <v-list-item
@@ -161,6 +169,7 @@ const onCloseDialog = (value) => {
         title="Emails"
         color="orange"
         value="email"
+        v-role="['adm', 'tecnico']"
         @click="openEmailDialog = true"
       ></v-list-item>
     </v-list>

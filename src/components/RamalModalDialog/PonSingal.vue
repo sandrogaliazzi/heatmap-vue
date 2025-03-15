@@ -14,7 +14,7 @@ const selectedDate = ref("");
 const showChart = ref(false);
 const avgRxList = ref([]);
 const avgTxList = ref([]);
-const labels = ref("");
+const labels = ref(null);
 
 const search = ref("");
 
@@ -57,7 +57,7 @@ const saveGponData = async () => {
     id: ramal._id,
     date_time: new Date().toLocaleString("pt-BR"),
     gpon_data: onuList,
-    avgSignal: calculateAverages(onuList)
+    avgSignal: calculateAverages(onuList),
   });
 
   console.log(save);
@@ -73,7 +73,6 @@ const saveGponData = async () => {
       status: "red",
     });
   }
-  
 };
 
 const setDataByDate = (data) => {
@@ -85,20 +84,25 @@ onMounted(async () => {
   const response = await fetchApi(`find-ramal-logs/${ramal._id}`);
   if (response.status === 200) {
     ramalHistory.value = response.data.ramalHistory;
-    avgRxList.value = ramalHistory.value.map(item => item.avgSignal.rx);
-    avgTxList.value = ramalHistory.value.map(item => item.avgSignal.tx);
-    labels.value = ramalHistory.value.map(item => item.date_time);
+    avgRxList.value = ramalHistory.value.map((item) => item.avgSignal.rx);
+    avgTxList.value = ramalHistory.value.map((item) => item.avgSignal.tx);
+    labels.value = ramalHistory.value.map((item) => item.date_time);
   }
 });
 </script>
 
 <template>
+  <signal-chart
+    v-model="showChart"
+    :tx="avgTxList"
+    :rx="avgRxList"
+    :labels="labels"
+    :ramal="ramal.oltRamal"
+    v-if="labels"
+  />
   <v-card>
     <v-card-text>
       <v-card flat>
-        <v-card-title> 
-          <signal-chart v-if="showChart" :tx="avgTxList" :rx="avgRxList" :labels="labels"/>
-        </v-card-title>
         <v-card-title>
           Lista clientes {{ ramal.oltRamal }}
           <v-chip
@@ -110,9 +114,14 @@ onMounted(async () => {
             {{ selectedDate }}
           </v-chip>
         </v-card-title>
-        <v-btn color="orange" variant="tonal" v-if="ramalHistory.length > 0" @click="showChart = !showChart">
+        <v-btn
+          color="orange"
+          variant="tonal"
+          v-if="ramalHistory.length > 0"
+          @click="showChart = !showChart"
+        >
           Ver histórico
-          <v-menu activator="parent">
+          <!-- <v-menu activator="parent">
             <v-list>
               <v-list-item
                 v-for="date in ramalHistory"
@@ -122,7 +131,7 @@ onMounted(async () => {
                 @click="setDataByDate(date)"
               ></v-list-item>
             </v-list>
-          </v-menu>
+          </v-menu> -->
         </v-btn>
         <template v-slot:text>
           <v-text-field

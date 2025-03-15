@@ -12,9 +12,11 @@ import { createApp } from "vue";
 
 // Plugins
 import { registerPlugins } from "@/plugins";
+import roleDirective from "./directives/roleDirective";
 
 const app = createApp(App);
 
 registerPlugins(app);
 
+app.directive("role", roleDirective);
 app.mount("#app");
