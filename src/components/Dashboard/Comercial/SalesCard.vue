@@ -24,7 +24,6 @@ function getWeekNumber(date) {
   // Obtendo o número da semana atual
   const weekNumber = momentDate.isoWeek();
 
-  console.log(weekNumber);
 
   return weekNumber;
 }
@@ -48,7 +47,7 @@ const fetchSales = async (seller) => {
           break;
         case "week":
           salesBySeller.value = response.data.filter(
-            (sale) => sale.weekNumber == getWeekNumber()
+            (sale) => sale.weekNumber == getWeekNumber() && sale.date.split("-")[0] == new Date().getFullYear()
           );
           break;
 
