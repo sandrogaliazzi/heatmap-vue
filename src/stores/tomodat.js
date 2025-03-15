@@ -149,6 +149,7 @@ export const useTomodatStore = defineStore("tomodat", () => {
         },
         percentage_free: cto.percentage_free,
         title: cto.name,
+        color: cto.color,
         id: cto.id,
         category: cto.category,
       };

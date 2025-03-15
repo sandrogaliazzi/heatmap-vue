@@ -87,9 +87,11 @@ const colors = {
 
 const byCurrentMonth = (sale) => {
   const month = sale.date.split("-")[1];
+  const year = sale.date.split("-")[0];
   const currentMonth = String(new Date().getMonth() + 1).padStart(2, "0");
+  const currentYear = String(new Date().getFullYear()).padStart(4, "0");
 
-  return month === currentMonth;
+  return (month === currentMonth && year === currentYear);
 };
 
 const getSalesByCity = async () => {

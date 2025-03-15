@@ -72,6 +72,7 @@ const selectRamal = async (ramal) => {
   });
 
   ponSignals.value = ponSignalsData.data;
+  console.log(ponSignalsData.data);
   average.value = calculateAverages(ponSignalsData.data);
 
   loading.value = false;

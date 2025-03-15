@@ -4,6 +4,7 @@ import { useTomodatStore } from "@/stores/tomodat";
 
 import ctoIcon from "@/assets/ctoconect.png";
 import ctoFullIcon from "@/assets/ctofull.png";
+import ctoWarning from "@/assets/ctowarning.png";
 import ceIcon from "@/assets/ce.png";
 
 const tomodatStore = useTomodatStore();
@@ -24,6 +25,7 @@ const props = defineProps({
 
 const isICon = (ap) => {
   if (ap.category == 4) return ceIcon;
+  else if(ap.color == "#ffff00") return ctoWarning;
   else {
     if (ap.percentage_free == 0) return ctoFullIcon;
     else return ctoIcon;
